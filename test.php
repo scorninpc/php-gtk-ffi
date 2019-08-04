@@ -81,7 +81,6 @@ $argc = FFI::new('int');
 $argv = FFI::new('char[0]');
 $pargv = FFI::addr($argv);
 
-
 $ffi->gtk_init(FFI::addr($argc), FFI::addr($pargv));
 
 
