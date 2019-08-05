@@ -11,6 +11,7 @@ class GtkWindow
 
 			typedef struct _GtkWidget GtkWidget;
 			typedef struct _GtkWindow GtkWindow;
+			typedef struct _GtkContainer GtkContainer;
 
 			typedef enum
 			{
@@ -27,13 +28,27 @@ class GtkWindow
 			typedef void  (*GCallback)              (void);
 			typedef char   gchar;
 			typedef unsigned long   gulong;
+			typedef unsigned int   guint;
 			typedef enum
 			{
 			  G_CONNECT_AFTER	= 1 << 0,
 			  G_CONNECT_SWAPPED	= 1 << 1
 			} GConnectFlags;
 
-			gulong g_signal_connect_object (gpointer instance, const gchar *detailed_signal, GCallback c_handler, gpointer gobject, GConnectFlags connect_flags);
+			typedef struct {
+				guint in_marshal;
+				guint is_invalid;
+			} GClosure;
+			typedef void (*GClosureNotify) (gpointer data, GClosure *closure);
+
+			gulong g_signal_connect_object (gpointer instance, gchar *detailed_signal, GCallback c_handler, gpointer gobject, GConnectFlags connect_flags);
+			gulong g_signal_connect_data (gpointer instance, const gchar *detailed_signal, GCallback c_handler, gpointer data, GClosureNotify destroy_data, GConnectFlags connect_flags);
+
+
+			GtkWidget *gtk_button_new_with_label (const gchar *label);
+
+			void gtk_container_add (GtkContainer *container, GtkWidget *widget);
+
 
 
 		", "libgtk-3.so");
@@ -51,7 +66,22 @@ class GtkWindow
 
 		$this->instance = $this->ffi->gtk_window_new(0);
 
-		$this->ffi->g_signal_connect_object($this->ffi->cast("gpointer *", $this->instance), "destroy", function() { global $ffi; $ffi->gtk_main_quit(); }, NULL, 1);
+		$this->ffi->g_signal_connect_object($this->ffi->cast("gpointer *", $this->instance), "destroy", function($a=NULL) { global $ffi; var_dump($a); $ffi->gtk_main_quit(); }, NULL, 1);
+
+
+
+		$this->button = $this->ffi->gtk_button_new_with_label("BUTTON");
+		$this->ffi->gtk_container_add($this->ffi->cast("GtkContainer *", $this->instance), $this->ffi->cast("GtkWidget *", $this->button));
+
+		$this->ffi->g_signal_connect_object($this->ffi->cast("gpointer *", $this->button), "clicked", function($a=NULL) {
+			
+			echo "\n----\nclicked\n----\n";
+			var_dump($a);
+
+		}, NULL, 1);
+		// $this->ffi->g_signal_connect_data($this->ffi->cast("gpointer *", $this->button), "button-release-event", function($a=NULL) { echo "\n----\button-release-event\n----\n"; var_dump($a); }, NULL, NULL, 2);
+
+
 	}
 
 	public function show_all()
