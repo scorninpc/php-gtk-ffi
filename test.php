@@ -50,9 +50,7 @@ class GtkWindow
 			void gtk_container_add (GtkContainer *container, GtkWidget *widget);
 
 
-
 		", "libgtk-3.so");
-
 
 		// $a = FFI::cdef("
 
@@ -66,19 +64,28 @@ class GtkWindow
 
 		$this->instance = $this->ffi->gtk_window_new(0);
 
-		$this->ffi->g_signal_connect_object($this->ffi->cast("gpointer *", $this->instance), "destroy", function($a=NULL) { global $ffi; var_dump($a); $ffi->gtk_main_quit(); }, NULL, 1);
+		$this->ffi->g_signal_connect_object($this->ffi->cast("gpointer *", $this->instance), "destroy", function($a=NULL) { 
+			global $ffi; 
+			
+			echo "\n----\ndestroy\n----\n";
+			var_dump($a); 
+			
+			$ffi->gtk_main_quit();
 
+		}, NULL, 1);
 
+		$parameter1 = FFI::new("char *", "Parameter 1");
 
 		$this->button = $this->ffi->gtk_button_new_with_label("BUTTON");
 		$this->ffi->gtk_container_add($this->ffi->cast("GtkContainer *", $this->instance), $this->ffi->cast("GtkWidget *", $this->button));
 
-		$this->ffi->g_signal_connect_object($this->ffi->cast("gpointer *", $this->button), "clicked", function($a=NULL) {
+		$this->ffi->g_signal_connect_object($this->ffi->cast("gpointer *", $this->button), "clicked", function($a=NULL, $b=NULL) {
 			
 			echo "\n----\nclicked\n----\n";
 			var_dump($a);
+			var_dump($b);
 
-		}, NULL, 1);
+		}, $parameter1, 1);
 		// $this->ffi->g_signal_connect_data($this->ffi->cast("gpointer *", $this->button), "button-release-event", function($a=NULL) { echo "\n----\button-release-event\n----\n"; var_dump($a); }, NULL, NULL, 2);
 
 
