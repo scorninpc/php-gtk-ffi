@@ -50,6 +50,46 @@ class GtkWindow
 			void gtk_container_add (GtkContainer *container, GtkWidget *widget);
 
 
+
+
+
+			typedef unsigned long gsize;
+			typedef gsize GType;
+
+			typedef struct {} GTypeClass;
+			
+			typedef GType G_TYPE_FROM_CLASS(GTypeClass) ;
+
+			typedef GType G_TYPE_FROM_INSTANCE(gpointer) (G_TYPE_FROM_CLASS (((GTypeInstance) (gpointer))->g_class));
+			typedef GType G_OBJECT_TYPE(gpointer) (G_TYPE_FROM_INSTANCE (gpointer));
+
+			typedef enum
+			{
+				G_SIGNAL_RUN_FIRST	= 1 << 0,
+				G_SIGNAL_RUN_LAST	= 1 << 1,
+				G_SIGNAL_RUN_CLEANUP	= 1 << 2,
+				G_SIGNAL_NO_RECURSE	= 1 << 3,
+				G_SIGNAL_DETAILED	= 1 << 4,
+				G_SIGNAL_ACTION	= 1 << 5,
+				G_SIGNAL_NO_HOOKS	= 1 << 6,
+				G_SIGNAL_MUST_COLLECT = 1 << 7,
+				G_SIGNAL_DEPRECATED   = 1 << 8
+			} GSignalFlags;
+
+			typedef struct {
+				guint signal_id;
+				const gchar *signal_name;
+				GType itype;
+				GSignalFlags signal_flags;
+				GType return_type;
+				guint n_params;
+				const GType *param_types;
+			} GSignalQuery;
+
+			void g_signal_query (guint signal_id, GSignalQuery *query);
+			guint g_signal_lookup (const gchar *name, GType itype);
+
+
 		", "libgtk-3.so");
 
 		// $a = FFI::cdef("
@@ -79,15 +119,20 @@ class GtkWindow
 		$this->button = $this->ffi->gtk_button_new_with_label("BUTTON");
 		$this->ffi->gtk_container_add($this->ffi->cast("GtkContainer *", $this->instance), $this->ffi->cast("GtkWidget *", $this->button));
 
-		$this->ffi->g_signal_connect_object($this->ffi->cast("gpointer *", $this->button), "clicked", function($a=NULL, $b=NULL) {
+		// Work
+		// $this->ffi->g_signal_connect_object($this->ffi->cast("gpointer *", $this->button), "clicked", function($a=NULL, $b=NULL) {
 			
-			echo "\n----\nclicked\n----\n";
-			var_dump($a);
-			var_dump($b);
+		// 	echo "\n----\nclicked\n----\n";
+		// 	var_dump($a);
+		// 	var_dump($b);
 
-		}, $parameter1, 1);
+		// }, $parameter1, 1);
+
+		// ----
 		// $this->ffi->g_signal_connect_data($this->ffi->cast("gpointer *", $this->button), "button-release-event", function($a=NULL) { echo "\n----\button-release-event\n----\n"; var_dump($a); }, NULL, NULL, 2);
 
+		// Abstract
+		$this->ffi->g_signal_query($this->ffi->g_signal_lookup("clicked", G_OBJECT_TYPE ($this->ffi->cast("gpointer *", $this->button))), $signal_info);
 
 	}
 
