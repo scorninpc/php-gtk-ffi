@@ -1,6 +1,7 @@
 <?php
 
-namespace Gtk {
+namespace Gtk 
+{
 
 	use FFI;
 
@@ -31,7 +32,7 @@ namespace Gtk {
 
 
 				typedef void* gpointer;
-				typedef void  (*GCallback)              (void);
+				typedef void  (*GCallback)              (gpointer *widget);
 
 				typedef char   gchar;
 				typedef unsigned long   gulong;
@@ -74,6 +75,9 @@ namespace Gtk {
 
 		public function connect($signal, $callback)
 		{
+			$params = FFI::new("int");
+			$params->cdata = 25;
+
 			$this->ffi->g_signal_connect_object($this->ffi->cast("gpointer *", $this->instance), $signal, $callback, NULL, 1);
 		}
 	}

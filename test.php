@@ -1,6 +1,13 @@
 <?php
 
 /**
+
+Types:
+	- https://developer.gnome.org/glib/stable/glib-Basic-Types.html
+
+**/
+
+/**
  *
  */
 class GtkWindow
@@ -10,8 +17,25 @@ class GtkWindow
 		$this->ffi = FFI::cdef("
 
 			typedef struct _GtkWidget GtkWidget;
+			typedef struct _GtkButton GtkButton;
 			typedef struct _GtkWindow GtkWindow;
 			typedef struct _GtkContainer GtkContainer;
+			typedef struct _GdkEvent GdkEvent;
+			typedef struct _GdkWindow GdkWindow;
+			typedef struct _GdkDevice GdkDevice;
+
+			typedef enum
+			{
+			  GDK_NOTHING,
+			  GDK_BUTTON_PRESS,
+			  GDK_2BUTTON_PRESS,
+			  GDK_DOUBLE_BUTTON_PRESS,
+			  GDK_3BUTTON_PRESS,
+			  GDK_TRIPLE_BUTTON_PRESS,
+			  GDK_BUTTON_RELEASE
+			} GdkEventType;
+
+			
 
 			typedef enum
 			{
@@ -25,15 +49,33 @@ class GtkWindow
 
 
 			typedef void* gpointer;
-			typedef void  (*GCallback)              (void);
+			typedef void  (*GCallback)              (gpointer *widget, GdkEvent *data);
 			typedef char   gchar;
+			typedef bool   gboolean;
 			typedef unsigned long   gulong;
 			typedef unsigned int   guint;
+			typedef signed char gint8;
+			typedef unsigned int guint32;
+			typedef double  gdouble;
 			typedef enum
 			{
 			  G_CONNECT_AFTER	= 1 << 0,
 			  G_CONNECT_SWAPPED	= 1 << 1
 			} GConnectFlags;
+
+			struct GdkEventButton {
+				GdkEventType type;
+				GdkWindow *window;
+				gint8 send_event;
+				guint32 time;
+				gdouble x;
+				gdouble y;
+				gdouble *axes;
+				guint state;
+				guint button;
+				GdkDevice *device;
+				gdouble x_root, y_root;
+			};
 
 			typedef struct {
 				guint in_marshal;
@@ -46,10 +88,102 @@ class GtkWindow
 
 
 			GtkWidget *gtk_button_new_with_label (const gchar *label);
+			void gtk_button_set_label (GtkButton *button, const gchar *label);
 
 			void gtk_container_add (GtkContainer *container, GtkWidget *widget);
 
 
+
+
+
+
+
+
+			/* NEW WAY TO CONNECT */
+
+
+
+			typedef gulong GType;
+
+
+			/* http://soc.if.usp.br/manual/libglib2.0-doc/gobject/gobject-Signals.html#GSignalFlags */
+			typedef enum {
+				G_SIGNAL_RUN_FIRST = 1 << 0,
+				G_SIGNAL_RUN_LAST = 1 << 1,
+				G_SIGNAL_RUN_CLEANUP = 1 << 2,
+				G_SIGNAL_NO_RECURSE = 1 << 3,
+				G_SIGNAL_DETAILED = 1 << 4,
+				G_SIGNAL_ACTION = 1 << 5,
+				G_SIGNAL_NO_HOOKS = 1 << 6,
+				G_SIGNAL_MUST_COLLECT = 1 << 7,
+				G_SIGNAL_DEPRECATED   = 1 << 8
+			} GSignalFlags;
+
+			
+
+
+
+
+
+			typedef struct
+			{
+			  guint		signal_id;
+			  const gchar  *signal_name;
+			  GType		itype;
+			  GSignalFlags signal_flags;
+			  GType		return_type; /* mangled with G_SIGNAL_TYPE_STATIC_SCOPE flag */
+			  guint		n_params;
+			  const GType  *param_types; /* mangled with G_SIGNAL_TYPE_STATIC_SCOPE flag */
+			} GSignalQuery;
+
+			void g_signal_query (guint signal_id, GSignalQuery *query);
+
+
+
+
+			guint g_signal_lookup (const gchar *name, GType itype);
+
+
+
+
+
+
+
+			/* http://refspecs.linuxbase.org/LSB_3.1.0/LSB-Desktop-generic/LSB-Desktop-generic/libgobject-2.0-ddefs.html */
+			
+			typedef struct _GTypeClass {
+			    GType g_type;
+			} GTypeClass;
+
+			typedef struct _GTypeInstance {
+			    GTypeClass *g_class;
+			} GTypeInstance;
+
+			/* OK FOR HERE */
+
+
+			
+			GClosure *g_cclosure_new_swap (GCallback callback_func, gpointer user_data, GClosureNotify destroy_data);
+			gulong g_signal_connect_closure (gpointer instance, const gchar *detailed_signal, GClosure *closure, gboolean after);
+
+
+
+
+			typedef struct 
+			{
+			    const char *callback_name;
+			    gpointer *callback_params;
+			    gpointer *self_widget;
+			    gpointer *parameters;
+
+			    guint signal_id;
+			    const gchar *signal_name;
+			    GType itype;
+			    GSignalFlags signal_flags;
+			    GType return_type;
+			    guint n_params;
+			    const GType *param_types;
+			} st_callback;
 
 		", "libgtk-3.so");
 
@@ -66,22 +200,79 @@ class GtkWindow
 
 		$this->instance = $this->ffi->gtk_window_new(0);
 
-		$this->ffi->g_signal_connect_object($this->ffi->cast("gpointer *", $this->instance), "destroy", function($a=NULL) { global $ffi; var_dump($a); $ffi->gtk_main_quit(); }, NULL, 1);
+		$this->ffi->g_signal_connect_object($this->ffi->cast("gpointer *", $this->instance), "destroy", function($a=NULL) { global $ffi; $ffi->gtk_main_quit(); }, NULL, 1);
 
 
 
 		$this->button = $this->ffi->gtk_button_new_with_label("BUTTON");
 		$this->ffi->gtk_container_add($this->ffi->cast("GtkContainer *", $this->instance), $this->ffi->cast("GtkWidget *", $this->button));
 
-		$this->ffi->g_signal_connect_object($this->ffi->cast("gpointer *", $this->button), "clicked", function($a=NULL) {
+		// $this->ffi->g_signal_connect_object($this->ffi->cast("gpointer *", $this->button), "button-release-event", function($a=NULL, $b=NULL) {
 			
-			echo "\n----\nclicked\n----\n";
-			var_dump($a);
 
-		}, NULL, 1);
+		// 	echo "\n----\nclicked\n----\n";
+
+		// 	$this->ffi->gtk_button_set_label($this->ffi->cast("GtkButton *", $a), "OK");
+
+		// 	echo "\n----\ncasting\n----\n";
+		// 	$c = $this->ffi->cast("GdkEventButton", $b->button);
+		// 	echo "\n----\ncasted\n----\n";
+
+		// 	var_dump($c->x);
+
+		// }, NULL, 1);
 		// $this->ffi->g_signal_connect_data($this->ffi->cast("gpointer *", $this->button), "button-release-event", function($a=NULL) { echo "\n----\button-release-event\n----\n"; var_dump($a); }, NULL, NULL, 2);
 
+		
+		// NEW CALLBACK WAY
+		$lookup = $this->ffi->g_signal_lookup ("button-release-event", $this->castAll($this->button));
 
+		$signal_info = FFI::addr($this->ffi->new("GSignalQuery"));
+
+		$this->ffi->g_signal_query($lookup, $signal_info);
+
+		$function = function($a=NULL) {
+			var_dump($a); 
+		};
+
+		// NICE TO HERE
+		$parameters = $this->ffi->new("st_callback");
+
+		// $parameters->callback_name = "button-release-event";
+		$parameters->signal_id = $signal_info->signal_id;
+		// $parameters->signal_name = $signal_info->signal_name;
+
+
+		$a = FFI::addr($parameters->signal_name);
+		echo "\nCRIADO\n";
+		FFI::memset($a, 0, 6);
+		echo "\nRESERVADO\n";
+		FFI::memcpy($a, $signal_info->signal_name, 6);
+		echo "\nCOPIADO\n";
+		var_dump($parameters);
+		echo "\nPRINTADO\n";
+
+
+
+		$closure = $this->ffi->g_cclosure_new_swap($function, $this->ffi->cast("gpointer *", $parameters), NULL);
+		$this->ffi->g_signal_connect_closure($this->ffi->cast("gpointer *", $this->button), "button-release-event", $closure, TRUE);
+
+
+
+		
+
+
+	}
+
+	public function castAll($a)
+	{
+		$g_class = $this->ffi->cast("GTypeInstance *", $a)->g_class;
+		$g_type = $this->ffi->cast("GTypeClass *", $g_class)->g_type;
+		// $c = $this->ffi->cast("GTypeInstance *", $a);
+
+		var_dump($g_type);
+
+		return $g_type;
 	}
 
 	public function show_all()

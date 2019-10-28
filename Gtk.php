@@ -1,6 +1,7 @@
 <?php
 
-namespace Gtk {
+namespace Gtk 
+{
 
 	use FFI;
 
@@ -8,7 +9,7 @@ namespace Gtk {
 		void gtk_init(int *, char **[]);
 		void gtk_main();
 		void gtk_main_quit();
-	", "/usr/lib/x86_64-linux-gnu/libgtk-3.so");
+	", "libgtk-3.so");
 
 	/**
 	 *

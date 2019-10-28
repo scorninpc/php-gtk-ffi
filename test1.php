@@ -8,10 +8,13 @@ require_once("GtkWindow.php");
 
 $window = new \Gtk\GtkWindow(\Gtk\GtkWindow::TOPLEVEL);
 $window->show_all();
-$window->connect("destroy", function($a=NULL) {
+$window->connect("delete-event", function($a=NULL) {
 	var_dump($a);
 
-	\Gtk\main_quit();
+	$a->show_all();
+
+	//\Gtk\main_quit();
+	return true;
 });
 
 \Gtk\main();
