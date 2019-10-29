@@ -145,7 +145,16 @@ class GtkWindow
 
 
 
-
+			struct st_callback
+			{
+				guint signal_id;
+				const gchar signal_name[20];
+				GType itype;
+				GSignalFlags signal_flags;
+				GType return_type;
+				guint n_params;
+				const GType *param_types;
+			};
 
 
 
@@ -168,22 +177,6 @@ class GtkWindow
 
 
 
-
-			typedef struct 
-			{
-			    const char *callback_name;
-			    gpointer *callback_params;
-			    gpointer *self_widget;
-			    gpointer *parameters;
-
-			    guint signal_id;
-			    const gchar *signal_name;
-			    GType itype;
-			    GSignalFlags signal_flags;
-			    GType return_type;
-			    guint n_params;
-			    const GType *param_types;
-			} st_callback;
 
 		", "libgtk-3.so");
 
@@ -225,33 +218,48 @@ class GtkWindow
 
 		
 		// NEW CALLBACK WAY
-		$lookup = $this->ffi->g_signal_lookup ("button-release-event", $this->castAll($this->button));
+		$lookup = $this->ffi->g_signal_lookup ("button-release-event", $this->G_OBJECT_TYPE($this->button));
 
 		$signal_info = FFI::addr($this->ffi->new("GSignalQuery"));
 
 		$this->ffi->g_signal_query($lookup, $signal_info);
 
-		$function = function($a=NULL) {
-			var_dump($a); 
+		$function = function($a=NULL, $GdkEvent=NULL) {
+
+			$p = $this->cast("struct st_callback*", $a);
+			var_dump($p);
+
+			// echo "\n------\n";
+			// $p = $this->ffi->new("struct st_callback");
+			// echo "\n------\n";
+			// FFI::memset($p, 0, FFI::sizeof("struct st_callback"));
+			// echo "\n------\n";
+			// FFI::memcpy($p, $a);
+			// echo "\n------\n";
+
+			// var_dump($p); 
+			// echo "\n------\n";
+
+			var_dump($GdkEvent); 
+
+			return false;
 		};
 
-		// NICE TO HERE
-		$parameters = $this->ffi->new("st_callback");
+		// NICE ABOVE HERE
+		$parameters = $this->ffi->new("struct st_callback
+			{
+				guint signal_id;
+				const gchar signal_name[" . strlen($signal_info->signal_name) . "];
+				GType itype;
+				GSignalFlags signal_flags;
+				GType return_type;
+				guint n_params;
+				const GType *param_types;
+			}");
 
 		// $parameters->callback_name = "button-release-event";
 		$parameters->signal_id = $signal_info->signal_id;
-		// $parameters->signal_name = $signal_info->signal_name;
-
-
-		$a = FFI::addr($parameters->signal_name);
-		echo "\nCRIADO\n";
-		FFI::memset($a, 0, 6);
-		echo "\nRESERVADO\n";
-		FFI::memcpy($a, $signal_info->signal_name, 6);
-		echo "\nCOPIADO\n";
-		var_dump($parameters);
-		echo "\nPRINTADO\n";
-
+		FFI::memcpy($parameters->signal_name, $signal_info->signal_name, strlen($signal_info->signal_name));
 
 
 		$closure = $this->ffi->g_cclosure_new_swap($function, $this->ffi->cast("gpointer *", $parameters), NULL);
@@ -264,13 +272,13 @@ class GtkWindow
 
 	}
 
-	public function castAll($a)
+	public function G_OBJECT_TYPE($a)
 	{
 		$g_class = $this->ffi->cast("GTypeInstance *", $a)->g_class;
 		$g_type = $this->ffi->cast("GTypeClass *", $g_class)->g_type;
 		// $c = $this->ffi->cast("GTypeInstance *", $a);
 
-		var_dump($g_type);
+		// var_dump($g_type);
 
 		return $g_type;
 	}
