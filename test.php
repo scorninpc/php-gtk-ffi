@@ -23,6 +23,8 @@ class GtkWindow
 			typedef struct _GdkEvent GdkEvent;
 			typedef struct _GdkWindow GdkWindow;
 			typedef struct _GdkDevice GdkDevice;
+			typedef struct _GList GList;
+			typedef struct _GSList GSList;
 
 			typedef enum
 			{
@@ -148,7 +150,7 @@ class GtkWindow
 			struct st_callback
 			{
 				guint signal_id;
-				const gchar signal_name[20];
+				const gchar signal_name[10];
 				GType itype;
 				GSignalFlags signal_flags;
 				GType return_type;
@@ -218,52 +220,42 @@ class GtkWindow
 
 		
 		// NEW CALLBACK WAY
-		$lookup = $this->ffi->g_signal_lookup ("button-release-event", $this->G_OBJECT_TYPE($this->button));
+		// $lookup = $this->ffi->g_signal_lookup ("button-release-event", $this->G_OBJECT_TYPE($this->button));
+		$lookup = $this->ffi->g_signal_lookup ("clicked", $this->G_OBJECT_TYPE($this->button));
 
 		$signal_info = FFI::addr($this->ffi->new("GSignalQuery"));
 
 		$this->ffi->g_signal_query($lookup, $signal_info);
 
 		$function = function($a=NULL, $GdkEvent=NULL) {
+			
+			// --------
+			// $parameters = $this->ffi->cast("struct st_callback", FFI::addr($a)); // WRONG POINTER
+			
+			// --------
+			// echo "\n------\n";
+			// $parameters = $this->ffi->cast("struct st_callback *", $a[0]); // GOT STRUCTURE, BUT WRONG DATA
+			// var_dump($parameters);
 
-			$p = $this->cast("struct st_callback*", $a);
-			var_dump($p);
+			// --------
+			echo "\n------\n";
+			$parameters = $this->ffi->cast("struct st_callback *", $a[0]); // GOT STRUCTURE, BUT WRONG DATA
+			var_dump($parameters);
+			
 
-			// echo "\n------\n";
-			// $p = $this->ffi->new("struct st_callback");
-			// echo "\n------\n";
-			// FFI::memset($p, 0, FFI::sizeof("struct st_callback"));
-			// echo "\n------\n";
-			// FFI::memcpy($p, $a);
-			// echo "\n------\n";
-
-			// var_dump($p); 
-			// echo "\n------\n";
-
+			// --------
 			var_dump($GdkEvent); 
-
-			return false;
 		};
 
 		// NICE ABOVE HERE
-		$parameters = $this->ffi->new("struct st_callback
-			{
-				guint signal_id;
-				const gchar signal_name[" . strlen($signal_info->signal_name) . "];
-				GType itype;
-				GSignalFlags signal_flags;
-				GType return_type;
-				guint n_params;
-				const GType *param_types;
-			}");
+		$parameters = $this->ffi->new("struct st_callback");
+		FFI::memset($parameters, 0, FFI::sizeof($parameters));
 
-		// $parameters->callback_name = "button-release-event";
 		$parameters->signal_id = $signal_info->signal_id;
 		FFI::memcpy($parameters->signal_name, $signal_info->signal_name, strlen($signal_info->signal_name));
 
-
-		$closure = $this->ffi->g_cclosure_new_swap($function, $this->ffi->cast("gpointer *", $parameters), NULL);
-		$this->ffi->g_signal_connect_closure($this->ffi->cast("gpointer *", $this->button), "button-release-event", $closure, TRUE);
+		$closure = $this->ffi->g_cclosure_new_swap($function, FFI::addr($this->ffi->cast("gpointer", FFI::addr($parameters))), NULL);
+		$this->ffi->g_signal_connect_closure($this->ffi->cast("gpointer *", $this->button), "clicked", $closure, TRUE);
 
 
 
