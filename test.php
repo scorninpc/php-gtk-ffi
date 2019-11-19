@@ -150,7 +150,7 @@ class GtkWindow
 			struct st_callback
 			{
 				guint signal_id;
-				const gchar signal_name[10];
+				const gchar *signal_name;
 				GType itype;
 				GSignalFlags signal_flags;
 				GType return_type;
@@ -178,7 +178,7 @@ class GtkWindow
 			gulong g_signal_connect_closure (gpointer instance, const gchar *detailed_signal, GClosure *closure, gboolean after);
 
 
-
+			const gchar *g_type_name (GType type);
 
 		", "libgtk-3.so");
 
@@ -221,41 +221,44 @@ class GtkWindow
 		
 		// NEW CALLBACK WAY
 		// $lookup = $this->ffi->g_signal_lookup ("button-release-event", $this->G_OBJECT_TYPE($this->button));
-		$lookup = $this->ffi->g_signal_lookup ("clicked", $this->G_OBJECT_TYPE($this->button));
+		// $lookup = $this->ffi->g_signal_lookup ("clicked", $this->G_OBJECT_TYPE($this->button));
+		
 
-		$signal_info = FFI::addr($this->ffi->new("GSignalQuery"));
+		$function = function() {
 
-		$this->ffi->g_signal_query($lookup, $signal_info);
 
-		$function = function($a=NULL, $GdkEvent=NULL) {
+			// for($i=0; $i<=$this->signal_info->n_params; $i++) {
+
+			// 	echo "\n----\ncasting " . $i . "\n----\n";
+
+			// 	$param = func_get_arg($i);
+			// 	if($param == NULL) {
+			// 		continue;
+			// 	}
+
+			// 	$a = $this->ffi->cast($this->ffi->g_type_name($this->signal_info->param_types[0]), func_get_arg($i-1));
+			// 	var_dump($a);
+
+			// }
+
+			// var_dump($this->ffi->g_type_name($this->signal_info->param_types[0]));
+			$a = func_get_arg(1);
+			$b = $a[0];
+			$c = $this->ffi->cast("struct _GdkEvent", $b);
+			var_dump($c);
+
+//			$a = $this->ffi->cast($this->ffi->g_type_name($this->signal_info->param_types[0]) . " *", func_get_arg(1));
+//			var_dump($a);
 			
-			// --------
-			// $parameters = $this->ffi->cast("struct st_callback", FFI::addr($a)); // WRONG POINTER
-			
-			// --------
-			// echo "\n------\n";
-			// $parameters = $this->ffi->cast("struct st_callback *", $a[0]); // GOT STRUCTURE, BUT WRONG DATA
-			// var_dump($parameters);
-
-			// --------
-			echo "\n------\n";
-			$parameters = $this->ffi->cast("struct st_callback *", $a[0]); // GOT STRUCTURE, BUT WRONG DATA
-			var_dump($parameters);
-			
-
-			// --------
-			var_dump($GdkEvent); 
 		};
 
-		// NICE ABOVE HERE
-		$parameters = $this->ffi->new("struct st_callback");
-		FFI::memset($parameters, 0, FFI::sizeof($parameters));
 
-		$parameters->signal_id = $signal_info->signal_id;
-		FFI::memcpy($parameters->signal_name, $signal_info->signal_name, strlen($signal_info->signal_name));
+		$lookup = $this->ffi->g_signal_lookup ("button-release-event", $this->G_OBJECT_TYPE($this->button));
+		$this->signal_info = FFI::addr($this->ffi->new("GSignalQuery"));
+		$this->ffi->g_signal_query($lookup, $this->signal_info);
 
-		$closure = $this->ffi->g_cclosure_new_swap($function, FFI::addr($this->ffi->cast("gpointer", FFI::addr($parameters))), NULL);
-		$this->ffi->g_signal_connect_closure($this->ffi->cast("gpointer *", $this->button), "clicked", $closure, TRUE);
+		$closure = $this->ffi->g_cclosure_new_swap($function, NULL, NULL);
+		$this->ffi->g_signal_connect_closure($this->ffi->cast("gpointer *", $this->button), "button-release-event", $closure, TRUE);
 
 
 
@@ -268,9 +271,6 @@ class GtkWindow
 	{
 		$g_class = $this->ffi->cast("GTypeInstance *", $a)->g_class;
 		$g_type = $this->ffi->cast("GTypeClass *", $g_class)->g_type;
-		// $c = $this->ffi->cast("GTypeInstance *", $a);
-
-		// var_dump($g_type);
 
 		return $g_type;
 	}
