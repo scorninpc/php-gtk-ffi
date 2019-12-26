@@ -5,13 +5,13 @@ namespace Gtk
 	/**
 	 *
 	 */
-	class Window extends Widget
+	class Window extends Container
 	{
-		
+
 		/**
-		 * Gtk Instance
+		 *
 		 */
-		protected $instance = "";
+		protected $name = "GtkWindow";
 
 		/**
 		 * GtkWindowType
@@ -45,6 +45,16 @@ namespace Gtk
 		public function set_title(string $title)
 		{
 			\Gtk::getFFI()->gtk_window_set_title(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $title);
+		}
+
+		/**
+		 *
+		 */
+		public function get_title() : string
+		{
+			$a = \Gtk::getFFI()->gtk_window_get_title(\Gtk::getFFI()->cast("GtkWindow *", $this->instance));
+
+			return $a;
 		}
 
 		/**

@@ -23,7 +23,7 @@ class Gtk
 	 */
 	private function __construct()
 	{
-		$this->ffi = FFI::load(PHPGTK3_SOUCE_PATH . "/Gtk/gtk.h");
+		$this->ffi = \FFI::load(PHPGTK3_SOUCE_PATH . "/Gtk/gtk.h");
 	}
 
 	/**
@@ -50,33 +50,34 @@ class Gtk
 	/**
 	 *
 	 */
-	static function init(int $argc=0, array $argv=[])
+	public static function init(int $argc=0, array $argv=[])
 	{
 		$instance = self::getInstance();
 
 		$argc = FFI::new('int');
 		$argv = FFI::new('char[0]');
 		$pargv = FFI::addr($argv);
-		Gtk::getFFI()->gtk_init(FFI::addr($argc), FFI::addr($pargv));
+
+		$instance->ffi->gtk_init(\FFI::addr($argc), \FFI::addr($pargv));
 	}
 
 	/**
 	 *
 	 */
-	static function main()
+	public static function main()
 	{
 		$instance = self::getInstance();
 
-		Gtk::getFFI()->gtk_main();
+		$instance->ffi->gtk_main();
 	}
 
 	/**
 	 *
 	 */
-	static function main_quit()
+	public static function main_quit()
 	{
 		$instance = self::getInstance();
 
-		Gtk::getFFI()->main_quit();
+		$instance->ffi->gtk_main_quit();
 	}
 }

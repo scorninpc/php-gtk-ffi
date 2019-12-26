@@ -13,3 +13,23 @@ spl_autoload_register(function($className) {
 
 	require_once($filename);
 });
+
+// Verify if cached/automagic file exists
+if(1) {
+
+}
+
+class PHPGTK3
+{
+	/**
+	 * Convert PHP string into char *
+	 */
+	static public function char_p(string $string)
+	{
+		$char = \FFI::new("char[" . strlen($string) . "]");
+
+		\FFI::memcpy($char, $string, strlen($string));
+
+		return \FFI::cast("char *", $char);
+	}
+}
