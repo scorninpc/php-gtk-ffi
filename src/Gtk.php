@@ -1,5 +1,7 @@
 <?php
 
+define("GTK_LIB_PATH", "/usr/lib/x86_64-linux-gnu/libgtk-3.so");
+
 /**
  *
  */
@@ -23,7 +25,9 @@ class Gtk
 	 */
 	private function __construct()
 	{
-		$this->ffi = \FFI::load(PHPGTK3_SOUCE_PATH . "/Gtk/gtk.h");
+		$final_header = PHPGTK3_SOURCE_PATH . "/Gtk/gtk.h";
+
+		$this->ffi = \FFI::load($final_header);
 	}
 
 	/**

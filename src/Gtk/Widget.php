@@ -207,15 +207,17 @@ namespace Gtk
 				// Object
 				$return_param[0] = $this;
 				// var_dump($signal_info);
+				// var_dump(func_get_args());
 
 
 				for($i=0; $i<$signal_info[0]->n_params; $i++) {
 					$gtype = $this->ffi->g_type_fundamental($signal_info[0]->param_types[$i]);
 					$gname = $this->ffi->g_type_name($gtype);
 					
-					// $gdkevent = new \Gdk\Event();
-					// $gdkevent->setInstance(func_get_arg($i+1));
-					$return_param[$i+1] = func_get_arg($i+1);
+					$gdkevent = new \Gdk\Event();
+					$gdkevent->setInstance(func_get_arg($i+1));
+					$return_param[$i+1] = $gdkevent;
+					// $return_param[$i+1] = func_get_arg($i+1);
 
 					// var_dump(\FFI::typeof(func_get_arg($i+1)));
 				}

@@ -118,7 +118,7 @@ namespace Gtk
 		 */
 		public function set_position(int $position)
 		{
-			\Gtk::getFFI()->gtk_window_set_position(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $position);
+			// \Gtk::getFFI()->gtk_window_set_position(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $position);
 		}
 
 		/**

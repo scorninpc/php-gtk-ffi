@@ -29,7 +29,6 @@ $window->set_hide_titlebar_when_maximized(TRUE);
 $window->connect("delete-event", function($window=NULL, $a=NULL) {
 	echo "destroyed\n";
 
-
 	\Gtk::main_quit();
 
 	return TRUE;
@@ -38,19 +37,26 @@ $window->connect("delete-event", function($window=NULL, $a=NULL) {
 
 
 $entry = new \Gtk\Entry();
-// $window->add($entry);
+$window->add($entry);
 
 $window->connect("button-press-event", function($entry=NULL, $a=NULL) {
 	echo "button released\n";
 
-	var_dump($a->button);
+	// var_dump($a->button->axes);
 
 });
 
-$entry->connect("delete-from-cursor", function($entry=NULL, $a=NULL) {
-	echo "deleted\n";
+$entry->connect("key-release-event", function($entry=NULL, $a=NULL) {
+	echo "pressed\n";
 
-	return FALSE;
+	// var_dump($a->key);
+	if($a->key->state & \Gdk::SHIFT_MASK) {
+		var_dump("SHIFT + " . chr($a->key->keyval));
+	}
+	else if($a->key->state & \Gdk::CONTROL_MASK) {
+		var_dump("CTRL + " . chr($a->key->keyval));
+	}
+	
 });
 
 $window->show_all();

@@ -1,23 +1,18 @@
 <?php
 
 // Define a path to source directory
-defined("PHPGTK3_SOUCE_PATH") || define("PHPGTK3_SOUCE_PATH", dirname(__FILE__) . "/src");
+defined("PHPGTK3_SOURCE_PATH") || define("PHPGTK3_SOURCE_PATH", dirname(__FILE__) . "/src");
 
 // Autoload
 spl_autoload_register(function($className) {
 
-	$filename = PHPGTK3_SOUCE_PATH . "/" . implode("/", explode("\\", $className)) . ".php";
+	$filename = PHPGTK3_SOURCE_PATH . "/" . implode("/", explode("\\", $className)) . ".php";
 	if(!file_exists($filename)) {
 		throw new Exception("Class \"" . $className . "\" not fount", 1);
 	}
 
 	require_once($filename);
 });
-
-// Verify if cached/automagic file exists
-if(1) {
-
-}
 
 class PHPGTK3
 {

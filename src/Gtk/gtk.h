@@ -12,6 +12,8 @@ typedef unsigned long gulong;
 typedef int gint;
 typedef unsigned int guint;
 typedef signed char gint8;
+typedef signed char guint8;
+typedef signed short guint16;
 typedef unsigned int guint32;
 typedef unsigned long gulong;
 typedef double gdouble;
@@ -143,6 +145,9 @@ typedef enum
 typedef struct _GdkWindow GdkWindow;
 typedef struct _GdkDevice GdkDevice;
 
+
+
+// GdkEventButton
 struct _GdkEventButton
 {
   GdkEventType type;
@@ -159,9 +164,27 @@ struct _GdkEventButton
 } ;
 typedef struct _GdkEventButton GdkEventButton;
 
+// GdkEventKey
+struct _GdkEventKey
+{
+  GdkEventType type;
+  GdkWindow *window;
+  gint8 send_event;
+  guint32 time;
+  guint state;
+  guint keyval;
+  guint16 hardware_keycode;
+  guint16 key_scancode;
+  guint8 group;
+  guint is_modifier : 1;
+};
+typedef struct _GdkEventKey	    GdkEventKey;
+
+// GdkEvent
 struct _GdkEvent
 {
   GdkEventButton	    button;
+  GdkEventKey	    	key;
 };
 typedef struct _GdkEvent GdkEvent;
 
