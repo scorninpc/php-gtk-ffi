@@ -3,6 +3,9 @@
 // Define a path to source directory
 defined("PHPGTK3_SOURCE_PATH") || define("PHPGTK3_SOURCE_PATH", dirname(__FILE__) . "/src");
 
+// General config
+define("PHPGTK3_RECOMPILE_HEADERS", TRUE);
+
 // Autoload
 spl_autoload_register(function($className) {
 

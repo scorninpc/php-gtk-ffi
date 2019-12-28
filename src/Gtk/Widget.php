@@ -28,7 +28,6 @@ namespace Gtk
 			$this->ffi = \Gtk::getFFI();
 		}
 
-
 		/**
 		 *
 		 */

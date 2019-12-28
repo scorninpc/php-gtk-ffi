@@ -27,6 +27,29 @@ class Gtk
 	{
 		$final_header = PHPGTK3_SOURCE_PATH . "/Gtk/gtk.h";
 
+		// Verifica se precisa recompilar o header cache
+		if(PHPGTK3_RECOMPILE_HEADERS) {
+			unlink($final_header);
+		}
+
+		// Verifica se o header nao existe
+		if(!file_exists($final_header)) {
+			// Create def lib path
+			$data = "#define FFI_LIB \"" . GTK_LIB_PATH . "\"\n\n";
+
+			// Percorre os headers
+			$files = scandir(PHPGTK3_SOURCE_PATH . "/Gtk/headers");
+			foreach($files as $file) {
+				if(!is_dir(PHPGTK3_SOURCE_PATH . "/Gtk/headers/" . $file)) {
+					$data .= file_get_contents(PHPGTK3_SOURCE_PATH . "/Gtk/headers/" . $file) . "\n\n";
+				}
+			}
+
+			// Cria o header cache final
+			file_put_contents($final_header, $data);
+		}
+
+		// Carrega o header
 		$this->ffi = \FFI::load($final_header);
 	}
 
