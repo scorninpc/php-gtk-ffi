@@ -8,6 +8,7 @@ typedef struct _GtkWidgetClass  GtkWidgetClass;
 
 typedef struct _GtkWindow GtkWindow;
 typedef struct _GtkContainer GtkContainer;
+typedef struct _GtkContainerClass GtkContainerClass;
 
 typedef struct _GObject GInitiallyUnowned;
 

@@ -31,6 +31,33 @@ namespace Gtk
 		/**
 		 *
 		 */
+		public function __call($name, $value)
+		{
+			$function_name = "gtk_widget_" . $name;
+		
+			
+				if(count($value) == 0)	 {
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->instance));
+				}
+				else if(count($value) == 1)	 {
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->instance), $value[0]);
+				}
+				else if(count($value) == 2)	 {
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->instance), $value[0], $value[1]);
+				}
+				else if(count($value) == 3)	 {
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->instance), $value[0], $value[1], $value[2]);
+				}
+				else if(count($value) == 4)	 {
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->instance), $value[0], $value[1], $value[2], $value[3]);
+				}
+
+			return $return;
+		}
+
+		/**
+		 *
+		 */
 		public function getInstance()
 		{
 			return $this->instance;

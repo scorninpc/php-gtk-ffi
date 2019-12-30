@@ -63,12 +63,22 @@ $entry->connect("key-release-event", function($entry=NULL, $a=NULL) {
 $window->show_all();
 // var_dump($window->get_title()); // PROBLEM WITH STRING RETURN
 $entry->set_visibility(TRUE);
-var_dump($entry->set_text("Test Field"));
-var_dump($entry->get_text());
+// var_dump($entry->set_text("Test Field"));
+// var_dump($entry->get_text());
 $entry->set_icon_from_icon_name(\Gtk\Entry::ICON_SECONDARY, "gtk-refresh");
 $entry->set_icon_activatable(\Gtk\Entry::ICON_SECONDARY, TRUE);
 $entry->set_icon_tooltip_text(\Gtk\Entry::ICON_SECONDARY, "Test field");
 // var_dump($entry->get_visibility());
+
+$a = $window->foreach(function($widget, $data1, $data2) {
+
+
+	$widget->set_text("OK");
+	var_dump($data1);
+	var_dump($data2);
+
+}, "mydata1", "mydata2");
+// var_dump($a);
 
 // 
 $window2 = new \Gtk\Window(\Gtk\Window::TOPLEVEL);

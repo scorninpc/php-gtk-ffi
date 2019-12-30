@@ -42,6 +42,37 @@ namespace Gtk
 		/**
 		 *
 		 */
+		public function __call($name, $value)
+		{
+			$function_name = "gtk_window_" . $name;
+		
+			try {
+				if(count($value) == 0)	 {
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->instance));
+				}
+				else if(count($value) == 1)	 {
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $value[0]);
+				}
+				else if(count($value) == 2)	 {
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $value[0], $value[1]);
+				}
+				else if(count($value) == 3)	 {
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $value[0], $value[1], $value[2]);
+				}
+				else if(count($value) == 4)	 {
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $value[0], $value[1], $value[2], $value[3]);
+				}
+			}
+			catch(\FFI\Exception $e) {
+				$return = parent::__call($name, $value);
+			}
+
+			return $return;
+		}
+
+		/**
+		 *
+		 */
 		public function set_title(string $title)
 		{
 			\Gtk::getFFI()->gtk_window_set_title(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $title);
