@@ -70,15 +70,15 @@ $entry->set_icon_activatable(\Gtk\Entry::ICON_SECONDARY, TRUE);
 $entry->set_icon_tooltip_text(\Gtk\Entry::ICON_SECONDARY, "Test field");
 // var_dump($entry->get_visibility());
 
-$a = $window->foreach(function($widget, $data1, $data2) {
+// $window->foreach(function($widget) {
+// 	$widget->set_text("OK");
+// });
 
+// $children = $window->get_children();
+// var_dump($children);
 
-	$widget->set_text("OK");
-	var_dump($data1);
-	var_dump($data2);
-
-}, "mydata1", "mydata2");
-// var_dump($a);
+// $focus = $window->get_focus_child();
+// var_dump($focus);
 
 // 
 $window2 = new \Gtk\Window(\Gtk\Window::TOPLEVEL);

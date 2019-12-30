@@ -36,7 +36,7 @@ namespace Gtk
 			parent::__construct();
 
 			// Create the window
-			$this->instance = \Gtk::getFFI()->gtk_window_new($GtkWindowType);
+			$this->cdata_instance = \Gtk::getFFI()->gtk_window_new($GtkWindowType);
 		}
 
 		/**
@@ -48,19 +48,19 @@ namespace Gtk
 		
 			try {
 				if(count($value) == 0)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->instance));
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance));
 				}
 				else if(count($value) == 1)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $value[0]);
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), $value[0]);
 				}
 				else if(count($value) == 2)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $value[0], $value[1]);
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), $value[0], $value[1]);
 				}
 				else if(count($value) == 3)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $value[0], $value[1], $value[2]);
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), $value[0], $value[1], $value[2]);
 				}
 				else if(count($value) == 4)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $value[0], $value[1], $value[2], $value[3]);
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), $value[0], $value[1], $value[2], $value[3]);
 				}
 			}
 			catch(\FFI\Exception $e) {
@@ -75,7 +75,7 @@ namespace Gtk
 		 */
 		public function set_title(string $title)
 		{
-			\Gtk::getFFI()->gtk_window_set_title(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $title);
+			\Gtk::getFFI()->gtk_window_set_title(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), $title);
 		}
 
 		/**
@@ -83,7 +83,7 @@ namespace Gtk
 		 */
 		public function get_title() : string
 		{
-			$a = \Gtk::getFFI()->gtk_window_get_title(\Gtk::getFFI()->cast("GtkWindow *", $this->instance));
+			$a = \Gtk::getFFI()->gtk_window_get_title(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance));
 
 			return $a;
 		}
@@ -93,7 +93,7 @@ namespace Gtk
 		 */
 		public function set_resizable(bool $resizable)
 		{
-			\Gtk::getFFI()->gtk_window_set_resizable(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $resizable);
+			\Gtk::getFFI()->gtk_window_set_resizable(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), $resizable);
 		}
 
 		/**
@@ -101,7 +101,7 @@ namespace Gtk
 		 */
 		public function get_resizable() : bool
 		{
-			return \Gtk::getFFI()->gtk_window_get_resizable(\Gtk::getFFI()->cast("GtkWindow *", $this->instance));
+			return \Gtk::getFFI()->gtk_window_get_resizable(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance));
 		}
 
 		/**
@@ -109,7 +109,7 @@ namespace Gtk
 		 */
 		public function set_modal(bool $modal)
 		{
-			\Gtk::getFFI()->gtk_window_set_modal(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $modal);
+			\Gtk::getFFI()->gtk_window_set_modal(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), $modal);
 		}
 
 		/**
@@ -117,7 +117,7 @@ namespace Gtk
 		 */
 		public function get_modal() : bool
 		{
-			return \Gtk::getFFI()->gtk_window_get_modal(\Gtk::getFFI()->cast("GtkWindow *", $this->instance));
+			return \Gtk::getFFI()->gtk_window_get_modal(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance));
 		}
 
 		/**
@@ -125,7 +125,7 @@ namespace Gtk
 		 */
 		public function set_default_size(int $width, int $height)
 		{
-			\Gtk::getFFI()->gtk_window_set_default_size(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $width, $height);
+			\Gtk::getFFI()->gtk_window_set_default_size(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), $width, $height);
 		}
 
 		/**
@@ -136,7 +136,7 @@ namespace Gtk
 			$width = \Gtk::getFFI()->new("gint", FALSE);
 			$height = \Gtk::getFFI()->new("gint", FALSE);
 
-			\Gtk::getFFI()->gtk_window_get_default_size(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), \FFI::addr($width), \FFI::addr($height));
+			\Gtk::getFFI()->gtk_window_get_default_size(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), \FFI::addr($width), \FFI::addr($height));
 
 			return [
 				'width' => $width->cdata,
@@ -149,7 +149,7 @@ namespace Gtk
 		 */
 		public function set_position(int $position)
 		{
-			// \Gtk::getFFI()->gtk_window_set_position(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $position);
+			// \Gtk::getFFI()->gtk_window_set_position(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), $position);
 		}
 
 		/**
@@ -160,7 +160,7 @@ namespace Gtk
 			$root_x = \Gtk::getFFI()->new("gint", FALSE);
 			$root_y = \Gtk::getFFI()->new("gint", FALSE);
 
-			\Gtk::getFFI()->gtk_window_get_position(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), \FFI::addr($root_x), \FFI::addr($root_y));
+			\Gtk::getFFI()->gtk_window_get_position(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), \FFI::addr($root_x), \FFI::addr($root_y));
 
 			return [
 				'x' => $root_x->cdata,
@@ -173,7 +173,7 @@ namespace Gtk
 		 */
 		public function set_transient_for($parent)
 		{
-			\Gtk::getFFI()->gtk_window_set_transient_for(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), \Gtk::getFFI()->cast("GtkWindow *", $parent->getInstance()));
+			\Gtk::getFFI()->gtk_window_set_transient_for(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), \Gtk::getFFI()->cast("GtkWindow *", $parent->cdata_instance));
 		}
 
 		/**
@@ -181,7 +181,7 @@ namespace Gtk
 		 */
 		public function set_attached_to($widget)
 		{
-			\Gtk::getFFI()->gtk_window_set_attached_to(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), \Gtk::getFFI()->cast("GtkWidget *", $widget->getInstance()));
+			\Gtk::getFFI()->gtk_window_set_attached_to(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), \Gtk::getFFI()->cast("GtkWidget *", $widget->cdata_instance));
 		}
 
 		/**
@@ -189,7 +189,7 @@ namespace Gtk
 		 */
 		public function set_destroy_with_parent(bool $setting)
 		{
-			\Gtk::getFFI()->gtk_window_set_destroy_with_parent(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $setting);
+			\Gtk::getFFI()->gtk_window_set_destroy_with_parent(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), $setting);
 		}
 
 		/**
@@ -197,7 +197,7 @@ namespace Gtk
 		 */
 		public function set_hide_titlebar_when_maximized(bool $setting)
 		{
-			\Gtk::getFFI()->gtk_window_set_hide_titlebar_when_maximized(\Gtk::getFFI()->cast("GtkWindow *", $this->instance), $setting);
+			\Gtk::getFFI()->gtk_window_set_hide_titlebar_when_maximized(\Gtk::getFFI()->cast("GtkWindow *", $this->cdata_instance), $setting);
 		}
 
 	}

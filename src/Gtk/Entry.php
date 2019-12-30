@@ -23,7 +23,7 @@ namespace Gtk
 			parent::__construct();
 
 			// Create the window
-			$this->instance = $this->ffi->gtk_entry_new();
+			$this->cdata_instance = $this->ffi->gtk_entry_new();
 		}
 
 		/**
@@ -34,19 +34,19 @@ namespace Gtk
 			$function_name = "gtk_entry_" . $name;
 		
 			if(count($value) == 0)	 {
-				$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkEntry *", $this->instance));
+				$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkEntry *", $this->cdata_instance));
 			}
 			else if(count($value) == 1)	 {
-				$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkEntry *", $this->instance), $value[0]);
+				$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkEntry *", $this->cdata_instance), $value[0]);
 			}
 			else if(count($value) == 2)	 {
-				$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkEntry *", $this->instance), $value[0], $value[1]);
+				$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkEntry *", $this->cdata_instance), $value[0], $value[1]);
 			}
 			else if(count($value) == 3)	 {
-				$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkEntry *", $this->instance), $value[0], $value[1], $value[2]);
+				$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkEntry *", $this->cdata_instance), $value[0], $value[1], $value[2]);
 			}
 			else if(count($value) == 4)	 {
-				$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkEntry *", $this->instance), $value[0], $value[1], $value[2], $value[3]);
+				$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkEntry *", $this->cdata_instance), $value[0], $value[1], $value[2], $value[3]);
 			}
 
 			return $return;
@@ -57,7 +57,7 @@ namespace Gtk
 		 */
 		public function set_visibility1(bool $visible)
 		{
-			\Gtk::getFFI()->gtk_entry_set_visibility(\Gtk::getFFI()->cast("GtkEntry *", $this->instance), $visible);
+			\Gtk::getFFI()->gtk_entry_set_visibility(\Gtk::getFFI()->cast("GtkEntry *", $this->cdata_instance), $visible);
 		}
 
 		/**
@@ -65,7 +65,7 @@ namespace Gtk
 		 */
 		public function get_visibility1() : bool
 		{
-			return \Gtk::getFFI()->gtk_entry_get_visibility(\Gtk::getFFI()->cast("GtkEntry *", $this->instance));
+			return \Gtk::getFFI()->gtk_entry_get_visibility(\Gtk::getFFI()->cast("GtkEntry *", $this->cdata_instance));
 		}
 	}
 }

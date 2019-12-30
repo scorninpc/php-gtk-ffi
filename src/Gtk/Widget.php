@@ -15,7 +15,7 @@ namespace Gtk
 		/**
 		 * Gtk Instance
 		 */
-		protected $instance = "";
+		public $instance = "";
 
 		/**
 		 *
@@ -37,19 +37,19 @@ namespace Gtk
 		
 			
 				if(count($value) == 0)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->instance));
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->cdata_instance));
 				}
 				else if(count($value) == 1)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->instance), $value[0]);
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->cdata_instance), $value[0]);
 				}
 				else if(count($value) == 2)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->instance), $value[0], $value[1]);
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->cdata_instance), $value[0], $value[1]);
 				}
 				else if(count($value) == 3)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->instance), $value[0], $value[1], $value[2]);
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->cdata_instance), $value[0], $value[1], $value[2]);
 				}
 				else if(count($value) == 4)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->instance), $value[0], $value[1], $value[2], $value[3]);
+					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->cdata_instance), $value[0], $value[1], $value[2], $value[3]);
 				}
 
 			return $return;
@@ -58,25 +58,9 @@ namespace Gtk
 		/**
 		 *
 		 */
-		public function getInstance()
-		{
-			return $this->instance;
-		}
-
-		/**
-		 *
-		 */
-		public function setInstance($instance)
-		{
-			$this->instance = $instance;
-		}
-
-		/**
-		 *
-		 */
 		public function destroy()
 		{
-			$this->ffi->gtk_widget_destroy($this->ffi->cast("GtkWidget *", $this->instance));
+			$this->ffi->gtk_widget_destroy($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -84,7 +68,7 @@ namespace Gtk
 		 */
 		public function in_destruction() : bool
 		{
-			return $this->ffi->gtk_widget_in_destruction($this->ffi->cast("GtkWidget *", $this->instance));
+			return $this->ffi->gtk_widget_in_destruction($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -92,7 +76,7 @@ namespace Gtk
 		 */
 		public function destroyed($widget)
 		{
-			$this->ffi->gtk_widget_destroyed($this->ffi->cast("GtkWidget *", $this->instance), $this->ffi->cast("GtkWidget **", \FFI::addr($this->instance)));
+			$this->ffi->gtk_widget_destroyed($this->ffi->cast("GtkWidget *", $this->cdata_instance), $this->ffi->cast("GtkWidget **", \FFI::addr($this->cdata_instance)));
 		}
 
 		/**
@@ -100,7 +84,7 @@ namespace Gtk
 		 */
 		public function unparent()
 		{
-			$this->ffi->gtk_widget_unparent($this->ffi->cast("GtkWidget *", $this->instance));
+			$this->ffi->gtk_widget_unparent($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -108,7 +92,7 @@ namespace Gtk
 		 */
 		public function show()
 		{
-			$this->ffi->gtk_widget_show($this->ffi->cast("GtkWidget *", $this->instance));
+			$this->ffi->gtk_widget_show($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -116,7 +100,7 @@ namespace Gtk
 		 */
 		public function show_now()
 		{
-			$this->ffi->gtk_widget_show_now($this->ffi->cast("GtkWidget *", $this->instance));
+			$this->ffi->gtk_widget_show_now($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -124,7 +108,7 @@ namespace Gtk
 		 */
 		public function hide()
 		{
-			$this->ffi->gtk_widget_hide($this->ffi->cast("GtkWidget *", $this->instance));
+			$this->ffi->gtk_widget_hide($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -132,7 +116,7 @@ namespace Gtk
 		 */
 		public function show_all()
 		{
-			$this->ffi->gtk_widget_show_all($this->ffi->cast("GtkWidget *", $this->instance));
+			$this->ffi->gtk_widget_show_all($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -140,7 +124,7 @@ namespace Gtk
 		 */
 		public function map()
 		{
-			$this->ffi->gtk_widget_map($this->ffi->cast("GtkWidget *", $this->instance));
+			$this->ffi->gtk_widget_map($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -148,7 +132,7 @@ namespace Gtk
 		 */
 		public function unmap()
 		{
-			$this->ffi->gtk_widget_unmap($this->ffi->cast("GtkWidget *", $this->instance));
+			$this->ffi->gtk_widget_unmap($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -156,7 +140,7 @@ namespace Gtk
 		 */
 		public function realize()
 		{
-			$this->ffi->gtk_widget_realize($this->ffi->cast("GtkWidget *", $this->instance));
+			$this->ffi->gtk_widget_realize($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -164,7 +148,7 @@ namespace Gtk
 		 */
 		public function queue_draw()
 		{
-			$this->ffi->gtk_widget_queue_draw($this->ffi->cast("GtkWidget *", $this->instance));
+			$this->ffi->gtk_widget_queue_draw($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -172,7 +156,7 @@ namespace Gtk
 		 */
 		public function queue_resize()
 		{
-			$this->ffi->gtk_widget_queue_resize($this->ffi->cast("GtkWidget *", $this->instance));
+			$this->ffi->gtk_widget_queue_resize($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -180,7 +164,7 @@ namespace Gtk
 		 */
 		public function queue_resize_no_redraw()
 		{
-			$this->ffi->gtk_widget_queue_resize_no_redraw($this->ffi->cast("GtkWidget *", $this->instance));
+			$this->ffi->gtk_widget_queue_resize_no_redraw($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -188,7 +172,7 @@ namespace Gtk
 		 */
 		public function queue_allocate()
 		{
-			$this->ffi->gtk_widget_queue_allocate($this->ffi->cast("GtkWidget *", $this->instance));
+			$this->ffi->gtk_widget_queue_allocate($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -196,7 +180,7 @@ namespace Gtk
 		 */
 		public function get_scale_factor() : int
 		{
-			return $this->ffi->gtk_widget_get_scale_factor($this->ffi->cast("GtkWidget *", $this->instance));
+			return $this->ffi->gtk_widget_get_scale_factor($this->ffi->cast("GtkWidget *", $this->cdata_instance));
 		}
 
 		/**
@@ -207,7 +191,7 @@ namespace Gtk
 			throw new \Exception("gtk_widget_size_allocate not implemented", 1);
 			
 			$allocate = $this->ffi->new("GtkAllocation");
-			$this->ffi->gtk_widget_size_allocate($this->ffi->cast("GtkWidget *", $this->instance), \FFI::addr($allocate));
+			$this->ffi->gtk_widget_size_allocate($this->ffi->cast("GtkWidget *", $this->cdata_instance), \FFI::addr($allocate));
 
 			return [
 				'x' => $allocate->x,
@@ -223,7 +207,7 @@ namespace Gtk
 		public function connect($signal_name, $callback)
 		{
 
-			$lookup = $this->ffi->g_signal_lookup ($signal_name, $this->G_OBJECT_TYPE($this->instance));
+			$lookup = $this->ffi->g_signal_lookup ($signal_name, $this->G_OBJECT_TYPE($this->cdata_instance));
 			$signal_info = \FFI::addr($this->ffi->new("GSignalQuery"));
 			$this->ffi->g_signal_query($lookup, $signal_info);
 			$closure = $this->ffi->g_cclosure_new_swap(function() use ($signal_info, $signal_name, $callback) {
@@ -241,7 +225,7 @@ namespace Gtk
 					$gname = $this->ffi->g_type_name($gtype);
 					
 					$gdkevent = new \Gdk\Event();
-					$gdkevent->setInstance(func_get_arg($i+1));
+					$gdkevent->cdata_instance = func_get_arg($i+1);
 					$return_param[$i+1] = $gdkevent;
 					// $return_param[$i+1] = func_get_arg($i+1);
 
@@ -259,7 +243,7 @@ namespace Gtk
 				}
 
 			}, NULL, NULL);
-			$this->ffi->g_signal_connect_closure($this->ffi->cast("gpointer", $this->instance), $signal_name, $closure, TRUE);
+			$this->ffi->g_signal_connect_closure($this->ffi->cast("gpointer", $this->cdata_instance), $signal_name, $closure, TRUE);
 
 // 			$index = 1;
 
@@ -269,7 +253,7 @@ namespace Gtk
 // 			$a->index = 1;
 // var_dump("1");
 // 			$a = $this->ffi->g_signal_connect_object(
-// 				$this->ffi->cast("gpointer *", $this->instance), 
+// 				$this->ffi->cast("gpointer *", $this->cdata_instance), 
 // 				$signal_name, 
 // 				function() use ($index) {
 // 					var_dump("lkkk: " . $index);
@@ -290,7 +274,7 @@ namespace Gtk
 			$instance = $this->ffi->cast($this->name . " *", $param1);
 			
 			$widget = new $this;
-			$widget->setInstance($instance);
+			$widget->cdata_instance = $instance;
 
 			// 
 			// $c = func_get_arg(1);
@@ -321,6 +305,24 @@ namespace Gtk
 			$g_type = $this->ffi->cast("GTypeClass *", $a)->g_type;
 
 			return $g_type;
+		}
+
+		/**
+		 * Convert an CDATA widget to PHPGTK widget
+		 */
+		public function PHPGTK_OBJECT($widget)
+		{
+			// Get type of widget
+			$widget = $this->ffi->cast("GtkWidget *", $widget);
+			$gtype = $this->G_OBJECT_TYPE($widget);
+			$gtype_name = $this->ffi->g_type_name($gtype);
+			
+			// Convert it to PHP-GTK class
+			$phpgtk_name = "\\Gtk\\" . substr($gtype_name, 3);
+			$phpgtk_object = new $phpgtk_name();
+			$phpgtk_object->cdata_instance = $widget;
+
+			return $phpgtk_object;
 		}
 	}
 

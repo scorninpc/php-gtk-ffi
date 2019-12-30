@@ -15,23 +15,7 @@ namespace Gdk
 		/**
 		 * Gtk Instance
 		 */
-		protected $instance = "";
-
-		/**
-		 *
-		 */
-		public function getInstance()
-		{
-			return $this->instance;
-		}
-
-		/**
-		 *
-		 */
-		public function setInstance($instance)
-		{
-			$this->instance = $instance;
-		}
+		public $cdata_instance = "";
 
 		/**
 		 *
@@ -47,11 +31,11 @@ namespace Gdk
 		{
 			if($name == "button") 
 			{
-				return $this->ffi->cast("GdkEventButton", $this->instance->button);
+				return $this->ffi->cast("GdkEventButton", $this->cdata_instance->button);
 			}
 			else if($name == "key") 
 			{
-				return $this->ffi->cast("GdkEventKey", $this->instance->button);
+				return $this->ffi->cast("GdkEventKey", $this->cdata_instance->button);
 			}
 		}
 	}
