@@ -80,6 +80,11 @@ $entry->set_icon_tooltip_text(\Gtk\Entry::ICON_SECONDARY, "Test field");
 // $focus = $window->get_focus_child();
 // var_dump($focus);
 
+// $gtype = $window->child_type();
+// var_dump($window->g_type_name($gtype));
+
+$window->child_notify($entry, "editable");
+
 // 
 $window2 = new \Gtk\Window(\Gtk\Window::TOPLEVEL);
 $window2->set_transient_for($window);

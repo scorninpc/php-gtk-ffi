@@ -441,17 +441,17 @@ void gtk_container_set_focus_child (GtkContainer *container, GtkWidget *child);
 
 GType gtk_container_child_type (GtkContainer *container);
 
-void gtk_container_child_get (GtkContainer *container, GtkWidget *child, gchar *first_prop_name, ...);
+// void gtk_container_child_get (GtkContainer *container, GtkWidget *child, gchar *first_prop_name, ...);
 
-void gtk_container_child_set (GtkContainer *container, GtkWidget *child, gchar *first_prop_name, ...);
+// void gtk_container_child_set (GtkContainer *container, GtkWidget *child, gchar *first_prop_name, ...);
 
-void gtk_container_child_get_property (GtkContainer *container, GtkWidget *child, gchar *property_name, GValue *value);
+// void gtk_container_child_get_property (GtkContainer *container, GtkWidget *child, gchar *property_name, GValue *value);
 
-void gtk_container_child_set_property (GtkContainer *container, GtkWidget *child, gchar *property_name, GValue *value);
+// void gtk_container_child_set_property (GtkContainer *container, GtkWidget *child, gchar *property_name, GValue *value);
 
-void gtk_container_child_get_valist (GtkContainer *container, GtkWidget *child, gchar *first_property_name, va_list var_args);
+// void gtk_container_child_get_valist (GtkContainer *container, GtkWidget *child, gchar *first_property_name, va_list var_args);
 
-void gtk_container_child_set_valist (GtkContainer *container, GtkWidget *child, gchar *first_property_name, va_list var_args);
+// void gtk_container_child_set_valist (GtkContainer *container, GtkWidget *child, gchar *first_property_name, va_list var_args);
 
 void gtk_container_child_notify (GtkContainer *container, GtkWidget *child, gchar *child_property);
 

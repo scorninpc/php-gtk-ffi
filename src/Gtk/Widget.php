@@ -307,6 +307,11 @@ namespace Gtk
 			return $g_type;
 		}
 
+		public function g_type_name($gtype)
+		{
+			return $this->ffi->g_type_name($gtype);
+		}
+
 		/**
 		 * Convert an CDATA widget to PHPGTK widget
 		 */

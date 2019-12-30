@@ -128,5 +128,21 @@ namespace Gtk
 		{
 			$this->ffi->gtk_container_set_focus_child($this->ffi->cast("GtkContainer *", $this->cdata_instance), $this->ffi->cast("GtkWidget *", $widget->cdata_instance));
 		}
+
+		/**
+		 *
+		 */
+		public function child_type()
+		{
+			return $this->ffi->gtk_container_child_type($this->ffi->cast("GtkContainer *", $this->cdata_instance));
+		}
+
+		/**
+		 *
+		 */
+		public function child_notify($widget, $child_property)
+		{
+			$this->ffi->gtk_container_child_notify($this->ffi->cast("GtkContainer *", $this->cdata_instance), $this->ffi->cast("GtkWidget *", $widget->cdata_instance), $child_property);
+		}
 	}
 }
