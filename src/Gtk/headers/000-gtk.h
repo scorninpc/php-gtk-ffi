@@ -6,9 +6,10 @@ typedef struct _GtkWidget GtkWidget;
 typedef struct _GtkWidgetClassPrivate  GtkWidgetClassPrivate;
 typedef struct _GtkWidgetClass  GtkWidgetClass;
 
-typedef struct _GtkWindow GtkWindow;
+typedef struct _GtkBox GtkBox;
 typedef struct _GtkContainer GtkContainer;
 typedef struct _GtkContainerClass GtkContainerClass;
+typedef struct _GtkWindow GtkWindow;
 
 typedef struct _GObject GInitiallyUnowned;
 
@@ -31,6 +32,27 @@ typedef guint32 gunichar;
 
 //
 typedef struct _GSList GSList;
+
+
+
+typedef enum
+{
+  GTK_BASELINE_POSITION_TOP,
+  GTK_BASELINE_POSITION_CENTER,
+  GTK_BASELINE_POSITION_BOTTOM
+} GtkBaselinePosition;
+
+typedef enum
+{
+  GTK_ORIENTATION_HORIZONTAL,
+  GTK_ORIENTATION_VERTICAL
+} GtkOrientation;
+
+typedef enum
+{
+  GTK_PACK_START,
+  GTK_PACK_END
+} GtkPackType;
 
 struct _GSList
 {

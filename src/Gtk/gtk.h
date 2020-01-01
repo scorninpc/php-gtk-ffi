@@ -8,9 +8,10 @@ typedef struct _GtkWidget GtkWidget;
 typedef struct _GtkWidgetClassPrivate  GtkWidgetClassPrivate;
 typedef struct _GtkWidgetClass  GtkWidgetClass;
 
-typedef struct _GtkWindow GtkWindow;
+typedef struct _GtkBox GtkBox;
 typedef struct _GtkContainer GtkContainer;
 typedef struct _GtkContainerClass GtkContainerClass;
+typedef struct _GtkWindow GtkWindow;
 
 typedef struct _GObject GInitiallyUnowned;
 
@@ -33,6 +34,27 @@ typedef guint32 gunichar;
 
 //
 typedef struct _GSList GSList;
+
+
+
+typedef enum
+{
+  GTK_BASELINE_POSITION_TOP,
+  GTK_BASELINE_POSITION_CENTER,
+  GTK_BASELINE_POSITION_BOTTOM
+} GtkBaselinePosition;
+
+typedef enum
+{
+  GTK_ORIENTATION_HORIZONTAL,
+  GTK_ORIENTATION_VERTICAL
+} GtkOrientation;
+
+typedef enum
+{
+  GTK_PACK_START,
+  GTK_PACK_END
+} GtkPackType;
 
 struct _GSList
 {
@@ -400,6 +422,21 @@ gboolean gtk_entry_grab_focus_without_selecting (GtkEntry *entry);
 
 const gchar *gtk_entry_get_text (GtkEntry *entry);
 void gtk_entry_set_text (GtkEntry *entry, const gchar *text);
+
+GtkWidget * gtk_box_new (GtkOrientation orientation, gint spacing);
+void gtk_box_pack_start (GtkBox *box, GtkWidget *child, gboolean expand, gboolean fill, guint padding);
+void gtk_box_pack_end (GtkBox *box, GtkWidget *child, gboolean expand, gboolean fill, guint padding);
+gboolean gtk_box_get_homogeneous (GtkBox *box);
+void gtk_box_set_homogeneous (GtkBox *box, gboolean homogeneous);
+gint gtk_box_get_spacing (GtkBox *box);
+void gtk_box_set_spacing (GtkBox *box, gint spacing);
+void gtk_box_reorder_child (GtkBox *box, GtkWidget *child, gint position);
+void gtk_box_query_child_packing (GtkBox *box, GtkWidget *child, gboolean *expand, gboolean *fill, guint *padding, GtkPackType *pack_type);
+void gtk_box_set_child_packing (GtkBox *box, GtkWidget *child, gboolean expand, gboolean fill, guint padding, GtkPackType pack_type);
+GtkBaselinePosition gtk_box_get_baseline_position (GtkBox *box);
+void gtk_box_set_baseline_position (GtkBox *box, GtkBaselinePosition position);
+GtkWidget * gtk_box_get_center_widget (GtkBox *box);
+void gtk_box_set_center_widget (GtkBox *box, GtkWidget *widget);
 
 
 
