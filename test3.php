@@ -8,19 +8,22 @@ class Test3
 {
 	public function __construct()
 	{
-		// Window 1
+		// Window
 		$this->window = new \Gtk\Window(\Gtk\Window::TOPLEVEL);
+		$this->window->set_default_size(500,500);
 		$this->window->set_title("PHP-GTK3 FFI Test3");
 		$this->window->connect("destroy", [$this, "window_destroy"]);
 
-		$box = new \Gtk\Box(\Gtk\Box::ORIENTATION_VERTICAL, 10);
+		// Paned
+		$paned = new \Gtk\Paned(\Gtk\Paned::ORIENTATION_HORIZONTAL);
+		$paned->pack1(new \Gtk\Entry());
+		$paned->pack2(new \Gtk\Entry());
+		$paned->set_position(100);
+		var_dump($paned->get_position());
 
-		$box->pack_start(new \Gtk\Entry(), FALSE, FALSE, 5);
-
-		$this->window->add($box);
+		// Show all and start
+		$this->window->add($paned);
 		$this->window->show_all();
-
-
 		\Gtk::main();
 	}
 

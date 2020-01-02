@@ -7,6 +7,7 @@ typedef struct _GtkWidgetClassPrivate  GtkWidgetClassPrivate;
 typedef struct _GtkWidgetClass  GtkWidgetClass;
 
 typedef struct _GtkBox GtkBox;
+typedef struct _GtkPaned GtkPaned;
 typedef struct _GtkContainer GtkContainer;
 typedef struct _GtkContainerClass GtkContainerClass;
 typedef struct _GtkWindow GtkWindow;

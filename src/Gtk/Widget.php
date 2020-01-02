@@ -265,27 +265,6 @@ namespace Gtk
 // var_dump("2");
 		}
 
-		private function connect_callback()
-		{
-			var_dump("OK");
-
-			// 
-			$param1 = func_get_arg(0);
-			$instance = $this->ffi->cast($this->name . " *", $param1);
-			
-			$widget = new $this;
-			$widget->cdata_instance = $instance;
-
-			// 
-			// $c = func_get_arg(1);
-			$data = $this->ffi->cast("struct st_callback*", $c);
-			var_dump($data);
-			// call_user_func_array(unserialize(serialize([$this, "funcA"])), []);
-
-			return FALSE;
-
-		}
-
 		/**
 		 *
 		 */

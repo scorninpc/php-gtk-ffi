@@ -9,6 +9,7 @@ typedef struct _GtkWidgetClassPrivate  GtkWidgetClassPrivate;
 typedef struct _GtkWidgetClass  GtkWidgetClass;
 
 typedef struct _GtkBox GtkBox;
+typedef struct _GtkPaned GtkPaned;
 typedef struct _GtkContainer GtkContainer;
 typedef struct _GtkContainerClass GtkContainerClass;
 typedef struct _GtkWindow GtkWindow;
@@ -513,6 +514,19 @@ void gtk_container_set_border_width (GtkContainer *container, guint border_width
 void gtk_container_class_handle_border_width (GtkContainerClass *klass);
 
 
+
+GtkWidget *gtk_paned_new (GtkOrientation orientation);
+void gtk_paned_add1 (GtkPaned *paned, GtkWidget *child);
+void gtk_paned_add2 (GtkPaned *paned, GtkWidget *child);
+void gtk_paned_pack1 (GtkPaned *paned, GtkWidget *child, gboolean resize, gboolean shrink);
+void gtk_paned_pack2 (GtkPaned *paned, GtkWidget *child, gboolean resize, gboolean shrink);
+GtkWidget *gtk_paned_get_child1 (GtkPaned *paned);
+GtkWidget *gtk_paned_get_child2 (GtkPaned *paned);
+void gtk_paned_set_position (GtkPaned *paned, gint position);
+gint gtk_paned_get_position (GtkPaned *paned);
+// GdkWindow *gtk_paned_get_handle_window (GtkPaned *paned);
+void gtk_paned_set_wide_handle (GtkPaned *paned, gboolean wide);
+gboolean gtk_paned_get_wide_handle (GtkPaned *paned);
 
 // GTKWINDOW
 GtkWidget *gtk_window_new (GtkWindowType);

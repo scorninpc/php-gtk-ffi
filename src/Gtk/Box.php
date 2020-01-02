@@ -11,7 +11,7 @@ namespace Gtk
 		/**
 		 *
 		 */
-		protected $name = "GtkWindow";
+		protected $name = "GtkBox";
 
 		/**
 		 * GtkPackType
