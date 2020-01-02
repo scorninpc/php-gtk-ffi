@@ -4,6 +4,9 @@ typedef struct _GdkWindow GdkWindow;
 typedef struct _GdkDevice GdkDevice;
 typedef struct _GdkRectangle GdkRectangle;
 
+typedef struct _GdkPixbuf    GdkPixbuf;
+typedef struct _GdkPixbufClass GdkPixbufClass;
+
 typedef struct _GtkWidget GtkWidget;
 typedef struct _GtkWidgetClassPrivate  GtkWidgetClassPrivate;
 typedef struct _GtkWidgetClass  GtkWidgetClass;
@@ -296,6 +299,33 @@ gulong g_signal_connect_closure (gpointer instance, const gchar *detailed_signal
 GType g_type_fundamental (GType type_id);
 const gchar *g_type_name (GType type);
 
+typedef enum {
+	GDK_COLORSPACE_RGB
+} GdkColorspace;
+
+struct _GdkPixbuf {
+	GObject parent_instance;
+	GdkColorspace colorspace;
+	int n_channels;
+	int bits_per_sample;
+	int width, height;
+	int rowstride;
+	guint has_alpha : 1;
+};
+
+struct _GdkPixbufClass {
+    GObjectClass parent_class;
+};
+
+struct _GError {
+  // GQuark       domain;
+  gint         code;
+  gchar       *message;
+};
+typedef struct _GError GError;
+
+GdkPixbuf *gdk_pixbuf_new_from_file (const char *filename, GError **error);
+
 struct _GtkWidget
 {
   GInitiallyUnowned parent_instance;
@@ -393,6 +423,8 @@ void gtk_entry_set_icon_from_icon_name (GtkEntry *entry, GtkEntryIconPosition  i
 // void gtk_entry_set_icon_from_gicon (GtkEntry *entry, GtkEntryIconPosition  icon_pos, GIcon *icon);
 // GtkImageType gtk_entry_get_icon_storage_type (GtkEntry *entry, GtkEntryIconPosition  icon_pos);
 // GdkPaintable * gtk_entry_get_icon_paintable (GtkEntry *entry, GtkEntryIconPosition  icon_pos);
+GdkPixbuf * gtk_entry_get_icon_pixbuf (GtkEntry *entry, GtkEntryIconPosition icon_pos);
+void gtk_entry_set_icon_from_pixbuf (GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkPixbuf *pixbuf);
 const gchar* gtk_entry_get_icon_name (GtkEntry *entry, GtkEntryIconPosition  icon_pos);
 // GIcon* gtk_entry_get_icon_gicon (GtkEntry *entry, GtkEntryIconPosition  icon_pos);
 void gtk_entry_set_icon_activatable (GtkEntry *entry, GtkEntryIconPosition  icon_pos, gboolean activatable);
@@ -544,4 +576,5 @@ void gtk_window_set_transient_for (GtkWindow *, GtkWindow *);
 void gtk_window_set_attached_to (GtkWindow *, GtkWidget *);
 void gtk_window_set_destroy_with_parent (GtkWindow *, gboolean);
 void gtk_window_set_hide_titlebar_when_maximized (GtkWindow *, gboolean);
+void gtk_window_maximize (GtkWindow *window);
 

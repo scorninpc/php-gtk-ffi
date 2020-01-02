@@ -104,7 +104,7 @@ namespace Gtk
 				$children[] = $widget;
 			});
 
-			return $children;;
+			return $children;
 		}
 
 		/**
@@ -134,7 +134,8 @@ namespace Gtk
 		 */
 		public function child_type()
 		{
-			return $this->ffi->gtk_container_child_type($this->ffi->cast("GtkContainer *", $this->cdata_instance));
+			$a = $this->ffi->gtk_container_child_type($this->ffi->cast("GtkContainer *", $this->cdata_instance));
+			return $a;
 		}
 
 		/**

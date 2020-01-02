@@ -308,6 +308,26 @@ namespace Gtk
 
 			return $phpgtk_object;
 		}
+
+
+		public function parse_variable($a)
+		{
+			if(gettype($a) == "object") {
+				if(get_class($a) == "FFI\CData") { 
+
+					// GObject
+					$gtkwidget = $this->ffi->cast("GObject *", $a);
+					$gtype = $this->G_OBJECT_TYPE($gtkwidget);
+					var_dump($this->ffi->g_type_name($gtype));
+				}
+				else {
+					return $a;
+				}
+			}
+			else {
+				return $a;
+			}
+		}
 	}
 
 }

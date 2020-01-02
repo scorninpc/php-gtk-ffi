@@ -14,3 +14,4 @@ void gtk_window_set_transient_for (GtkWindow *, GtkWindow *);
 void gtk_window_set_attached_to (GtkWindow *, GtkWidget *);
 void gtk_window_set_destroy_with_parent (GtkWindow *, gboolean);
 void gtk_window_set_hide_titlebar_when_maximized (GtkWindow *, gboolean);
+void gtk_window_maximize (GtkWindow *window);

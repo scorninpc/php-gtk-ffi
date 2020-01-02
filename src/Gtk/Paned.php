@@ -64,6 +64,19 @@ namespace Gtk
 		/**
 		 *
 		 */
+		public function get_position()
+		{
+			$pos = $this->ffi->gtk_paned_get_position($this->ffi->cast("GtkPaned *", $this->cdata_instance));
+
+
+			$this->parse_variable($pos);
+
+			return $pos;
+		}
+
+		/**
+		 *
+		 */
 		public function add1(\Gtk\Widget $child)
 		{
 			$this->ffi->gtk_paned_add1($this->ffi->cast("GtkPaned *", $this->cdata_instance), $child->cdata_instance);
@@ -99,6 +112,9 @@ namespace Gtk
 		public function get_child1()
 		{
 			$object = $this->ffi->gtk_paned_get_child1($this->ffi->cast("GtkPaned *", $this->cdata_instance));
+
+			$this->parse_variable($object);
+
 			return $this->PHPGTK_OBJECT($object);
 		}
 

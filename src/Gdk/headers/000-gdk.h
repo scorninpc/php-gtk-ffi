@@ -21,6 +21,8 @@ typedef struct _GObject                  GObject;
 typedef struct _GObjectClass             GObjectClass;
 typedef struct _GObjectConstructParam    GObjectConstructParam;
 
+typedef struct _GdkPaintable    GdkPaintable;
+
 typedef struct _GSList GSList;
 struct _GSList
 {
