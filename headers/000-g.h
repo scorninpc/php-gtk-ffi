@@ -1,0 +1,16 @@
+typedef void* gpointer;
+typedef char gchar;
+typedef bool gboolean;
+typedef unsigned long gulong;
+typedef int gint;
+typedef unsigned int guint;
+typedef signed char gint8;
+typedef signed char guint8;
+typedef signed short guint16;
+typedef unsigned int guint32;
+typedef unsigned long gulong;
+typedef double gdouble;
+typedef float gfloat;
+typedef gulong GType;
+typedef unsigned int gsize;
+typedef guint32 gunichar;
