@@ -1,6 +1,6 @@
 <?php
 
-define("GTK_LIB_PATH", "/usr/lib/x86_64-linux-gnu/libgtk-3.so");
+define("GTK_LIB_PATH", "/usr/lib/x86_64-linux-gnu/libgtk-3.so.0");
 
 /**
  *

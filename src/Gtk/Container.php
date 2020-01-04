@@ -26,29 +26,34 @@ namespace Gtk
 		public function __call($name, $value)
 		{
 			$function_name = "gtk_container_" . $name;
+			$widget_cast = "GtkContainer *";
 		
 			try {
 				if(count($value) == 0)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkContainer *", $this->cdata_instance));
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance));
 				}
 				else if(count($value) == 1)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkContainer *", $this->cdata_instance), $value[0]);
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance), $value[0]);
 				}
 				else if(count($value) == 2)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkContainer *", $this->cdata_instance), $value[0], $value[1]);
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance), $value[0], $value[1]);
 				}
 				else if(count($value) == 3)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkContainer *", $this->cdata_instance), $value[0], $value[1], $value[2]);
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance), $value[0], $value[1], $value[2]);
 				}
 				else if(count($value) == 4)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkContainer *", $this->cdata_instance), $value[0], $value[1], $value[2], $value[3]);
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance), $value[0], $value[1], $value[2], $value[3]);
 				}
+
+				$return = $this->parse_variable($returned, $name);
 			}
 			catch(\FFI\Exception $e) {
-				$return = parent::__call($name, $value);
-			}
+				if(strpos("Attempt to call undefined C function", $e->getMessage()) !== FALSE) {
+					$return = parent::__call($name, $value);
+				}
 
-			
+				throw $e;
+			}
 
 			return $return;
 		}
@@ -107,19 +112,19 @@ namespace Gtk
 			return $children;
 		}
 
-		/**
-		 *
-		 */
-		public function get_focus_child()
-		{
-			$children = [];
+		// /**
+		//  *
+		//  */
+		// public function get_focus_child()
+		// {
+		// 	$children = [];
 
-			$widget = $this->ffi->gtk_container_get_focus_child($this->ffi->cast("GtkContainer *", $this->cdata_instance));
+		// 	$widget = $this->ffi->gtk_container_get_focus_child($this->ffi->cast("GtkContainer *", $this->cdata_instance));
 
-			$object = $this->PHPGTK_OBJECT($widget);
+		// 	$object = $this->PHPGTK_OBJECT($widget);
 
-			return $object;
-		}
+		// 	return $object;
+		// }
 
 		/**
 		 *

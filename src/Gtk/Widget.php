@@ -34,23 +34,30 @@ namespace Gtk
 		public function __call($name, $value)
 		{
 			$function_name = "gtk_widget_" . $name;
+			$widget_cast = "GtkWidget *";
 		
-			
+			try {
 				if(count($value) == 0)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->cdata_instance));
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance));
 				}
 				else if(count($value) == 1)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->cdata_instance), $value[0]);
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance), $value[0]);
 				}
 				else if(count($value) == 2)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->cdata_instance), $value[0], $value[1]);
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance), $value[0], $value[1]);
 				}
 				else if(count($value) == 3)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->cdata_instance), $value[0], $value[1], $value[2]);
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance), $value[0], $value[1], $value[2]);
 				}
 				else if(count($value) == 4)	 {
-					$return = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast("GtkWidget *", $this->cdata_instance), $value[0], $value[1], $value[2], $value[3]);
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance), $value[0], $value[1], $value[2], $value[3]);
 				}
+
+				$return = $this->parse_variable($returned);
+			}
+			catch(\FFI\Exception $e) {
+				throw $e;
+			}
 
 			return $return;
 		}
@@ -310,24 +317,47 @@ namespace Gtk
 		}
 
 
-		public function parse_variable($a)
+		/**
+		 *
+		 */
+		public function parse_variable($a, $method="")
 		{
 			if(gettype($a) == "object") {
 				if(get_class($a) == "FFI\CData") { 
-
+				
+					// @todo - Find way to verify if $a is void
+					if(\FFI::isNull(\FFI::addr($a))) { 
+						return NULL;
+					}
+					
 					// GObject
-					$gtkwidget = $this->ffi->cast("GObject *", $a);
-					$gtype = $this->G_OBJECT_TYPE($gtkwidget);
-					var_dump($this->ffi->g_type_name($gtype));
-				}
-				else {
-					return $a;
+					try {
+						$gtkwidget = $this->ffi->cast("GObject *", $a);
+						$gtype = $this->G_OBJECT_TYPE($gtkwidget);
+					}
+					catch(\FFI\Exception $e) {
+						try {
+							return \FFI::string($a);
+						}
+						catch(\FFI\Exception $e) {
+							return NULL;
+						}
+					}
+					
+					// preg_match_all('/((?:^|[A-Z])[a-z]+)/', $this->ffi->g_type_name($gtype), $classPart);
+					$classPart = preg_split('/(?=[A-Z])/', $this->ffi->g_type_name($gtype));
+
+					$className = implode("\\", $classPart);
+					$object = new $className();
+					$object->cdata_instance = $a;
+
+					return $object;
 				}
 			}
-			else {
-				return $a;
-			}
+
+			return $a;
 		}
+
 	}
 
 }

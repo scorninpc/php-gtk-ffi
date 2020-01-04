@@ -21,29 +21,14 @@ class Test3
 		$paned->pack2(new \Gtk\Entry());
 		$paned->set_position(100);
 
+		// Show all and start
+		$this->window->add($paned);
+		$this->window->show_all();		
+
 		// Pixbuf
 		$pixbuf = \Gdk\Pixbuf::new_from_file("/home/scorninpc/Desktop/Bruno/BUILD_PHP_GTK/php-gtk3/logo.png");
 		$entry->set_icon_from_pixbuf(0, $pixbuf);
-
-
-		// Debug return variables test
-		echo "\narray\n";
-		$this->window->get_children();
-
-		echo "\nobject\n";
-		$paned->get_child1();
 		
-		echo "\ninteger\n";
-		$paned->get_position();
-
-		echo "\nGdkPixbuf\n";
-		$entry->get_icon_pixbuf(0);
-
-
-
-		// Show all and start
-		$this->window->add($paned);
-		$this->window->show_all();
 		\Gtk::main();
 	}
 

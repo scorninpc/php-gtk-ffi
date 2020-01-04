@@ -45,87 +45,36 @@ namespace Gtk
 		public function __call($name, $value)
 		{
 			$function_name = "gtk_window_" . $name;
+			$widget_cast = "GtkWindow *";
 		
 			try {
 				if(count($value) == 0)	 {
-					$return = $this->ffi->$function_name($this->ffi->cast("GtkWindow *", $this->cdata_instance));
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance));
 				}
 				else if(count($value) == 1)	 {
-					$return = $this->ffi->$function_name($this->ffi->cast("GtkWindow *", $this->cdata_instance), $value[0]);
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance), $value[0]);
 				}
 				else if(count($value) == 2)	 {
-					$return = $this->ffi->$function_name($this->ffi->cast("GtkWindow *", $this->cdata_instance), $value[0], $value[1]);
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance), $value[0], $value[1]);
 				}
 				else if(count($value) == 3)	 {
-					$return = $this->ffi->$function_name($this->ffi->cast("GtkWindow *", $this->cdata_instance), $value[0], $value[1], $value[2]);
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance), $value[0], $value[1], $value[2]);
 				}
 				else if(count($value) == 4)	 {
-					$return = $this->ffi->$function_name($this->ffi->cast("GtkWindow *", $this->cdata_instance), $value[0], $value[1], $value[2], $value[3]);
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance), $value[0], $value[1], $value[2], $value[3]);
 				}
+
+				$return = $this->parse_variable($returned, $name);
 			}
 			catch(\FFI\Exception $e) {
-				$return = parent::__call($name, $value);
+				if(strpos("Attempt to call undefined C function", $e->getMessage()) !== FALSE) {
+					$return = parent::__call($name, $value);
+				}
+
+				throw $e;
 			}
 
 			return $return;
-		}
-
-		/**
-		 *
-		 */
-		public function set_title(string $title)
-		{
-			$this->ffi->gtk_window_set_title($this->ffi->cast("GtkWindow *", $this->cdata_instance), $title);
-		}
-
-		/**
-		 *
-		 */
-		public function get_title() : string
-		{
-			$a = $this->ffi->gtk_window_get_title($this->ffi->cast("GtkWindow *", $this->cdata_instance));
-
-			return $a;
-		}
-
-		/**
-		 *
-		 */
-		public function set_resizable(bool $resizable)
-		{
-			$this->ffi->gtk_window_set_resizable($this->ffi->cast("GtkWindow *", $this->cdata_instance), $resizable);
-		}
-
-		/**
-		 *
-		 */
-		public function get_resizable() : bool
-		{
-			return $this->ffi->gtk_window_get_resizable($this->ffi->cast("GtkWindow *", $this->cdata_instance));
-		}
-
-		/**
-		 *
-		 */
-		public function set_modal(bool $modal)
-		{
-			$this->ffi->gtk_window_set_modal($this->ffi->cast("GtkWindow *", $this->cdata_instance), $modal);
-		}
-
-		/**
-		 *
-		 */
-		public function get_modal() : bool
-		{
-			return $this->ffi->gtk_window_get_modal($this->ffi->cast("GtkWindow *", $this->cdata_instance));
-		}
-
-		/**
-		 *
-		 */
-		public function set_default_size(int $width, int $height)
-		{
-			$this->ffi->gtk_window_set_default_size($this->ffi->cast("GtkWindow *", $this->cdata_instance), $width, $height);
 		}
 
 		/**
@@ -142,14 +91,6 @@ namespace Gtk
 				'width' => $width->cdata,
 				'height' => $height->cdata,
 			];
-		}
-
-		/**
-		 *
-		 */
-		public function set_position(int $position)
-		{
-			// $this->ffi->gtk_window_set_position($this->ffi->cast("GtkWindow *", $this->cdata_instance), $position);
 		}
 
 		/**
@@ -182,22 +123,6 @@ namespace Gtk
 		public function set_attached_to($widget)
 		{
 			$this->ffi->gtk_window_set_attached_to($this->ffi->cast("GtkWindow *", $this->cdata_instance), $this->ffi->cast("GtkWidget *", $widget->cdata_instance));
-		}
-
-		/**
-		 *
-		 */
-		public function set_destroy_with_parent(bool $setting)
-		{
-			$this->ffi->gtk_window_set_destroy_with_parent($this->ffi->cast("GtkWindow *", $this->cdata_instance), $setting);
-		}
-
-		/**
-		 *
-		 */
-		public function set_hide_titlebar_when_maximized(bool $setting)
-		{
-			$this->ffi->gtk_window_set_hide_titlebar_when_maximized($this->ffi->cast("GtkWindow *", $this->cdata_instance), $setting);
 		}
 
 	}

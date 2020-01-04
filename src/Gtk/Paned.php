@@ -22,7 +22,7 @@ namespace Gtk
 		/**
 		 *
 		 */
-		public function __construct(int $orientation)
+		public function __construct(int $orientation=0)
 		{
 			parent::__construct();
 
@@ -58,7 +58,7 @@ namespace Gtk
 				$return = parent::__call($name, $value);
 			}
 
-			return $return;
+			return $this->parse_variable($return);
 		}
 
 		/**
