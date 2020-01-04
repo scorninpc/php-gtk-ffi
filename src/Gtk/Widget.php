@@ -52,6 +52,9 @@ namespace Gtk
 				else if(count($value) == 4)	 {
 					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance), $value[0], $value[1], $value[2], $value[3]);
 				}
+				else if(count($value) == 5)	 {
+					$returned = \Gtk::getFFI()->$function_name(\Gtk::getFFI()->cast($widget_cast, $this->cdata_instance), $value[0], $value[1], $value[2], $value[3], $value[4]);
+				}
 
 				$return = $this->parse_variable($returned);
 			}
@@ -60,6 +63,14 @@ namespace Gtk
 			}
 
 			return $return;
+		}
+
+		/**
+		 *
+		 */
+		public function add_accelerator($signal, $accel_group, $accel_key, $accel_mods, $accel_flags)
+		{
+			$this->ffi->gtk_widget_add_accelerator($this->ffi->cast("GtkWidget *", $this->cdata_instance), $signal, $accel_group->cdata_instance, $accel_key, $accel_mods, $accel_flags);
 		}
 
 		/**
@@ -223,9 +234,6 @@ namespace Gtk
 
 				// Object
 				$return_param[0] = $this;
-				// var_dump($signal_info);
-				// var_dump(func_get_args());
-
 
 				for($i=0; $i<$signal_info[0]->n_params; $i++) {
 					$gtype = $this->ffi->g_type_fundamental($signal_info[0]->param_types[$i]);
@@ -234,9 +242,6 @@ namespace Gtk
 					$gdkevent = new \Gdk\Event();
 					$gdkevent->cdata_instance = func_get_arg($i+1);
 					$return_param[$i+1] = $gdkevent;
-					// $return_param[$i+1] = func_get_arg($i+1);
-
-					// var_dump(\FFI::typeof(func_get_arg($i+1)));
 				}
 
 
@@ -245,7 +250,6 @@ namespace Gtk
 				if($signal_info[0]->return_type != 4) {
 
 					$return_p = $this->ffi->new("gpointer");
-					// $return_p
 					return $return_p;
 				}
 

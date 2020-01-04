@@ -33,3 +33,5 @@ void gtk_widget_queue_resize_no_redraw (GtkWidget *);
 void gtk_widget_queue_allocate (GtkWidget *);
 gint gtk_widget_get_scale_factor (GtkWidget *);
 void gtk_widget_size_allocate (GtkWidget *, GtkAllocation *);
+
+void gtk_widget_add_accelerator(GtkWidget *widget, const gchar *accel_signal, GtkAccelGroup *accel_group, guint accel_key, GdkModifierType accel_mods, GtkAccelFlags accel_flags);

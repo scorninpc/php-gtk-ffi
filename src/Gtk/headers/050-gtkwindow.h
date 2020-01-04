@@ -4,15 +4,15 @@ GtkWidget * gtk_window_new (GtkWindowType type);
 
 void gtk_window_set_title (GtkWindow *window, gchar *title);
 
-// void gtk_window_set_wmclass (GtkWindow *window, gchar *wmclass_name, gchar *wmclass_class);
+// DEPRECATED void gtk_window_set_wmclass (GtkWindow *window, gchar *wmclass_name, gchar *wmclass_class);
 
 void gtk_window_set_resizable (GtkWindow *window, gboolean resizable);
 
 gboolean gtk_window_get_resizable (GtkWindow *window);
 
-// void gtk_window_add_accel_group (GtkWindow *window, GtkAccelGroup *accel_group);
+void gtk_window_add_accel_group (GtkWindow *window, GtkAccelGroup *accel_group);
 
-// void gtk_window_remove_accel_group (GtkWindow *window, GtkAccelGroup *accel_group);
+void gtk_window_remove_accel_group (GtkWindow *window, GtkAccelGroup *accel_group);
 
 gboolean gtk_window_activate_focus (GtkWindow *window);
 
@@ -22,7 +22,7 @@ void gtk_window_set_modal (GtkWindow *window, gboolean modal);
 
 void gtk_window_set_default_size (GtkWindow *window, gint width, gint height);
 
-// void gtk_window_set_default_geometry (GtkWindow *window, gint width, gint height);
+// DEPRECATED void gtk_window_set_default_geometry (GtkWindow *window, gint width, gint height);
 
 // void gtk_window_set_geometry_hints (GtkWindow *window, GtkWidget *geometry_widget, GdkGeometry *geometry, GdkWindowHints geom_mask);
 
@@ -180,13 +180,13 @@ GtkWindowType gtk_window_get_window_type (GtkWindow *window);
 
 void gtk_window_move (GtkWindow *window, gint x, gint y);
 
-// gboolean gtk_window_parse_geometry (GtkWindow *window, gchar *geometry);
+// DEPRECATED gboolean gtk_window_parse_geometry (GtkWindow *window, gchar *geometry);
 
-// void gtk_window_reshow_with_initial_size (GtkWindow *window);
+// DEPRECATED void gtk_window_reshow_with_initial_size (GtkWindow *window);
 
 void gtk_window_resize (GtkWindow *window, gint width, gint height);
 
-// void gtk_window_resize_to_geometry (GtkWindow *window, gint width, gint height);
+// DEPRECATED void gtk_window_resize_to_geometry (GtkWindow *window, gint width, gint height);
 
 void gtk_window_set_default_icon_list (GList *list);
 
@@ -206,9 +206,9 @@ void gtk_window_set_icon_name (GtkWindow *window, gchar *name);
 
 void gtk_window_set_auto_startup_notification (gboolean setting);
 
-// gdouble gtk_window_get_opacity (GtkWindow *window);
+// DEPRECATED gdouble gtk_window_get_opacity (GtkWindow *window);
 
-// void gtk_window_set_opacity (GtkWindow *window, gdouble opacity);
+// DEPRECATED void gtk_window_set_opacity (GtkWindow *window, gdouble opacity);
 
 gboolean gtk_window_get_mnemonics_visible (GtkWindow *window);
 
@@ -218,13 +218,13 @@ gboolean gtk_window_get_focus_visible (GtkWindow *window);
 
 void gtk_window_set_focus_visible (GtkWindow *window, gboolean setting);
 
-// void gtk_window_set_has_resize_grip (GtkWindow *window, gboolean value);
+// DEPRECATED void gtk_window_set_has_resize_grip (GtkWindow *window, gboolean value);
 
-// gboolean gtk_window_get_has_resize_grip (GtkWindow *window);
+// DEPRECATED gboolean gtk_window_get_has_resize_grip (GtkWindow *window);
 
-// gboolean gtk_window_resize_grip_is_visible (GtkWindow *window);
+// DEPRECATED gboolean gtk_window_resize_grip_is_visible (GtkWindow *window);
 
-// gboolean gtk_window_get_resize_grip_area (GtkWindow *window, GdkRectangle *rect);
+// DEPRECATED gboolean gtk_window_get_resize_grip_area (GtkWindow *window, GdkRectangle *rect);
 
 // GtkApplication * gtk_window_get_application (GtkWindow *window);
 

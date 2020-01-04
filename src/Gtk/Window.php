@@ -67,7 +67,7 @@ namespace Gtk
 				$return = $this->parse_variable($returned, $name);
 			}
 			catch(\FFI\Exception $e) {
-				if(strpos("Attempt to call undefined C function", $e->getMessage()) !== FALSE) {
+				if(strpos($e->getMessage(), "Attempt to call undefined C function") !== FALSE) {
 					$return = parent::__call($name, $value);
 				}
 
@@ -123,6 +123,14 @@ namespace Gtk
 		public function set_attached_to($widget)
 		{
 			$this->ffi->gtk_window_set_attached_to($this->ffi->cast("GtkWindow *", $this->cdata_instance), $this->ffi->cast("GtkWidget *", $widget->cdata_instance));
+		}
+		
+		/**
+		 *
+		 */
+		public function add_accel_group($accel)
+		{
+			$this->ffi->gtk_window_add_accel_group($this->ffi->cast("GtkWindow *", $this->cdata_instance), $this->ffi->cast("GtkAccelGroup *", $accel->cdata_instance));
 		}
 
 	}

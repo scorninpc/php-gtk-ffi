@@ -11,6 +11,7 @@ typedef struct _GtkWidget GtkWidget;
 typedef struct _GtkWidgetClassPrivate  GtkWidgetClassPrivate;
 typedef struct _GtkWidgetClass  GtkWidgetClass;
 
+typedef struct _GtkAccelGroup GtkAccelGroup;
 typedef struct _GtkBox GtkBox;
 typedef struct _GtkPaned GtkPaned;
 typedef struct _GtkContainer GtkContainer;
@@ -40,6 +41,48 @@ typedef guint32 gunichar;
 typedef struct _GSList GSList;
 
 
+typedef enum
+{
+  GDK_SHIFT_MASK    = 1 << 0,
+  GDK_LOCK_MASK     = 1 << 1,
+  GDK_CONTROL_MASK  = 1 << 2,
+  GDK_MOD1_MASK     = 1 << 3,
+  GDK_MOD2_MASK     = 1 << 4,
+  GDK_MOD3_MASK     = 1 << 5,
+  GDK_MOD4_MASK     = 1 << 6,
+  GDK_MOD5_MASK     = 1 << 7,
+  GDK_BUTTON1_MASK  = 1 << 8,
+  GDK_BUTTON2_MASK  = 1 << 9,
+  GDK_BUTTON3_MASK  = 1 << 10,
+  GDK_BUTTON4_MASK  = 1 << 11,
+  GDK_BUTTON5_MASK  = 1 << 12,
+  GDK_MODIFIER_RESERVED_13_MASK  = 1 << 13,
+  GDK_MODIFIER_RESERVED_14_MASK  = 1 << 14,
+  GDK_MODIFIER_RESERVED_15_MASK  = 1 << 15,
+  GDK_MODIFIER_RESERVED_16_MASK  = 1 << 16,
+  GDK_MODIFIER_RESERVED_17_MASK  = 1 << 17,
+  GDK_MODIFIER_RESERVED_18_MASK  = 1 << 18,
+  GDK_MODIFIER_RESERVED_19_MASK  = 1 << 19,
+  GDK_MODIFIER_RESERVED_20_MASK  = 1 << 20,
+  GDK_MODIFIER_RESERVED_21_MASK  = 1 << 21,
+  GDK_MODIFIER_RESERVED_22_MASK  = 1 << 22,
+  GDK_MODIFIER_RESERVED_23_MASK  = 1 << 23,
+  GDK_MODIFIER_RESERVED_24_MASK  = 1 << 24,
+  GDK_MODIFIER_RESERVED_25_MASK  = 1 << 25,
+  GDK_SUPER_MASK    = 1 << 26,
+  GDK_HYPER_MASK    = 1 << 27,
+  GDK_META_MASK     = 1 << 28,
+  GDK_MODIFIER_RESERVED_29_MASK  = 1 << 29,
+  GDK_RELEASE_MASK  = 1 << 30,
+  GDK_MODIFIER_MASK = 0x5c001fff
+} GdkModifierType;
+
+typedef enum
+{
+  GTK_ACCEL_VISIBLE        = 1 << 0,
+  GTK_ACCEL_LOCKED         = 1 << 1,
+  GTK_ACCEL_MASK           = 0x07
+} GtkAccelFlags;
 
 typedef enum
 {
@@ -380,6 +423,8 @@ void gtk_widget_queue_allocate (GtkWidget *);
 gint gtk_widget_get_scale_factor (GtkWidget *);
 void gtk_widget_size_allocate (GtkWidget *, GtkAllocation *);
 
+void gtk_widget_add_accelerator(GtkWidget *widget, const gchar *accel_signal, GtkAccelGroup *accel_group, guint accel_key, GdkModifierType accel_mods, GtkAccelFlags accel_flags);
+
 // GTKENTRY
 
 typedef enum
@@ -473,6 +518,55 @@ gboolean gtk_entry_grab_focus_without_selecting (GtkEntry *entry);
 
 const gchar *gtk_entry_get_text (GtkEntry *entry);
 void gtk_entry_set_text (GtkEntry *entry, const gchar *text);
+
+
+GtkAccelGroup * gtk_accel_group_new (void);
+
+// void gtk_accel_group_connect (GtkAccelGroup *accel_group, guint accel_key, GdkModifierType accel_mods, GtkAccelFlags accel_flags, GClosure *closure);
+
+void gtk_accel_group_connect_by_path (GtkAccelGroup *accel_group, gchar *accel_path, GClosure *closure);
+
+gboolean gtk_accel_group_disconnect (GtkAccelGroup *accel_group, GClosure *closure);
+
+gboolean gtk_accel_group_disconnect_key (GtkAccelGroup *accel_group, guint accel_key, GdkModifierType accel_mods);
+
+// gboolean gtk_accel_group_activate (GtkAccelGroup *accel_group, GQuark accel_quark, GObject *acceleratable, guint accel_key, GdkModifierType accel_mods);
+
+void gtk_accel_group_lock (GtkAccelGroup *accel_group);
+
+void gtk_accel_group_unlock (GtkAccelGroup *accel_group);
+
+gboolean gtk_accel_group_get_is_locked (GtkAccelGroup *accel_group);
+
+GtkAccelGroup * gtk_accel_group_from_accel_closure (GClosure *closure);
+
+GdkModifierType gtk_accel_group_get_modifier_mask (GtkAccelGroup *accel_group);
+
+gboolean gtk_accel_groups_activate (GObject *object, guint accel_key, GdkModifierType accel_mods);
+
+GSList * gtk_accel_groups_from_object (GObject *object);
+
+// GtkAccelKey * gtk_accel_group_find (GtkAccelGroup *accel_group, GtkAccelGroupFindFunc find_func, gpointer data);
+
+gboolean gtk_accelerator_valid (guint keyval, GdkModifierType modifiers);
+
+void gtk_accelerator_parse (gchar *accelerator, guint *accelerator_key, GdkModifierType *accelerator_mods);
+
+gchar * gtk_accelerator_name (guint accelerator_key, GdkModifierType accelerator_mods);
+
+gchar * gtk_accelerator_get_label (guint accelerator_key, GdkModifierType accelerator_mods);
+
+void gtk_accelerator_parse_with_keycode (gchar *accelerator, guint *accelerator_key, guint **accelerator_codes, GdkModifierType *accelerator_mods);
+
+// gchar * gtk_accelerator_name_with_keycode (GdkDisplay *display, guint accelerator_key, guint keycode, GdkModifierType accelerator_mods);
+
+// gchar * gtk_accelerator_get_label_with_keycode (GdkDisplay *display, guint accelerator_key, guint keycode, GdkModifierType accelerator_mods);
+
+void gtk_accelerator_set_default_mod_mask (GdkModifierType default_mod_mask);
+
+GdkModifierType gtk_accelerator_get_default_mod_mask (void);
+
+
 
 GtkWidget * gtk_box_new (GtkOrientation orientation, gint spacing);
 void gtk_box_pack_start (GtkBox *box, GtkWidget *child, gboolean expand, gboolean fill, guint padding);
@@ -584,15 +678,15 @@ GtkWidget * gtk_window_new (GtkWindowType type);
 
 void gtk_window_set_title (GtkWindow *window, gchar *title);
 
-// void gtk_window_set_wmclass (GtkWindow *window, gchar *wmclass_name, gchar *wmclass_class);
+// DEPRECATED void gtk_window_set_wmclass (GtkWindow *window, gchar *wmclass_name, gchar *wmclass_class);
 
 void gtk_window_set_resizable (GtkWindow *window, gboolean resizable);
 
 gboolean gtk_window_get_resizable (GtkWindow *window);
 
-// void gtk_window_add_accel_group (GtkWindow *window, GtkAccelGroup *accel_group);
+void gtk_window_add_accel_group (GtkWindow *window, GtkAccelGroup *accel_group);
 
-// void gtk_window_remove_accel_group (GtkWindow *window, GtkAccelGroup *accel_group);
+void gtk_window_remove_accel_group (GtkWindow *window, GtkAccelGroup *accel_group);
 
 gboolean gtk_window_activate_focus (GtkWindow *window);
 
@@ -602,7 +696,7 @@ void gtk_window_set_modal (GtkWindow *window, gboolean modal);
 
 void gtk_window_set_default_size (GtkWindow *window, gint width, gint height);
 
-// void gtk_window_set_default_geometry (GtkWindow *window, gint width, gint height);
+// DEPRECATED void gtk_window_set_default_geometry (GtkWindow *window, gint width, gint height);
 
 // void gtk_window_set_geometry_hints (GtkWindow *window, GtkWidget *geometry_widget, GdkGeometry *geometry, GdkWindowHints geom_mask);
 
@@ -760,13 +854,13 @@ GtkWindowType gtk_window_get_window_type (GtkWindow *window);
 
 void gtk_window_move (GtkWindow *window, gint x, gint y);
 
-// gboolean gtk_window_parse_geometry (GtkWindow *window, gchar *geometry);
+// DEPRECATED gboolean gtk_window_parse_geometry (GtkWindow *window, gchar *geometry);
 
-// void gtk_window_reshow_with_initial_size (GtkWindow *window);
+// DEPRECATED void gtk_window_reshow_with_initial_size (GtkWindow *window);
 
 void gtk_window_resize (GtkWindow *window, gint width, gint height);
 
-// void gtk_window_resize_to_geometry (GtkWindow *window, gint width, gint height);
+// DEPRECATED void gtk_window_resize_to_geometry (GtkWindow *window, gint width, gint height);
 
 void gtk_window_set_default_icon_list (GList *list);
 
@@ -786,9 +880,9 @@ void gtk_window_set_icon_name (GtkWindow *window, gchar *name);
 
 void gtk_window_set_auto_startup_notification (gboolean setting);
 
-// gdouble gtk_window_get_opacity (GtkWindow *window);
+// DEPRECATED gdouble gtk_window_get_opacity (GtkWindow *window);
 
-// void gtk_window_set_opacity (GtkWindow *window, gdouble opacity);
+// DEPRECATED void gtk_window_set_opacity (GtkWindow *window, gdouble opacity);
 
 gboolean gtk_window_get_mnemonics_visible (GtkWindow *window);
 
@@ -798,13 +892,13 @@ gboolean gtk_window_get_focus_visible (GtkWindow *window);
 
 void gtk_window_set_focus_visible (GtkWindow *window, gboolean setting);
 
-// void gtk_window_set_has_resize_grip (GtkWindow *window, gboolean value);
+// DEPRECATED void gtk_window_set_has_resize_grip (GtkWindow *window, gboolean value);
 
-// gboolean gtk_window_get_has_resize_grip (GtkWindow *window);
+// DEPRECATED gboolean gtk_window_get_has_resize_grip (GtkWindow *window);
 
-// gboolean gtk_window_resize_grip_is_visible (GtkWindow *window);
+// DEPRECATED gboolean gtk_window_resize_grip_is_visible (GtkWindow *window);
 
-// gboolean gtk_window_get_resize_grip_area (GtkWindow *window, GdkRectangle *rect);
+// DEPRECATED gboolean gtk_window_get_resize_grip_area (GtkWindow *window, GdkRectangle *rect);
 
 // GtkApplication * gtk_window_get_application (GtkWindow *window);
 

@@ -14,8 +14,6 @@ $window->add($entry);
 // Show all and start
 $window->show_all();
 
-	$window->set_type_hint(4);
-
 	$window->set_title("OK");
 	var_dump($window->get_title());
 
@@ -33,5 +31,14 @@ $window->show_all();
 	var_dump($window->activate_focus());
 
 
+// Accel
+$accel = new \Gtk\Accel\Group();
+$window->add_accel_group($accel);
+$entry->add_accelerator("activate", $accel, 0xFFBE, \Gdk\Accel\Modifier\Type::SHIFT_MASK, 0); // (SHIFT + F1)
+$entry->connect("activate", function($widget) {
+	echo "OK\n";
+});
+
+$window->show_all();
 // Loop
 \Gtk::main();

@@ -48,7 +48,7 @@ namespace Gtk
 				$return = $this->parse_variable($returned, $name);
 			}
 			catch(\FFI\Exception $e) {
-				if(strpos("Attempt to call undefined C function", $e->getMessage()) !== FALSE) {
+				if(strpos($e->getMessage(), "Attempt to call undefined C function") !== FALSE) {
 					$return = parent::__call($name, $value);
 				}
 
