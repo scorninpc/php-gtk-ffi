@@ -33,3 +33,11 @@ struct  _GObject
   guint ref_count;
   // GData *qdata;
 };
+
+
+struct _GError
+{
+  GQuark       domain;
+  gint         code;
+  gchar       *message;
+};

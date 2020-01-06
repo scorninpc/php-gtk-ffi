@@ -1,6 +1,6 @@
 <?php
 
-$ffi = FFI::load("src/Gtk/gtk.h");
+$ffi = FFI::load("./gtk.h");
 
 $argc = FFI::new('int');
 $argv = FFI::new('char[0]');

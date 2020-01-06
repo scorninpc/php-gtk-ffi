@@ -92,3 +92,11 @@ typedef enum
   GDK_GRAB_BROKEN       = 35,
   GDK_DAMAGE            = 36
 } GdkEventType;
+
+typedef enum
+{
+  GDK_ACTION_COPY    = 1 << 0,
+  GDK_ACTION_MOVE    = 1 << 1,
+  GDK_ACTION_LINK    = 1 << 2,
+  GDK_ACTION_ASK     = 1 << 3
+} GdkDragAction;

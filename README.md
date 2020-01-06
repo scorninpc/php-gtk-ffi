@@ -19,3 +19,5 @@ PHP 8.0.0-dev (cli) (built: Dec 20 2019 22:41:23) ( NTS )
 Copyright (c) The PHP Group
 Zend Engine v3.4.0-dev, Copyright (c) Zend Technologies
 ```
+
+On Windows, run ```set GTK_CSD=0``` on command line before execute php

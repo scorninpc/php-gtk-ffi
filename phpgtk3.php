@@ -7,7 +7,16 @@ defined("PHPGTK3_PATH") || define("PHPGTK3_PATH", dirname(__FILE__));
 defined("PHPGTK3_SOURCE_PATH") || define("PHPGTK3_SOURCE_PATH", PHPGTK3_PATH . "/src");
 
 // Define lib path
-define("GTK_LIB_PATH", "/usr/lib/x86_64-linux-gnu/libgtk-3.so.0");
+if(strtolower(PHP_OS_FAMILY) === "windows") {
+	define("GTK_LIB_PATH", "C:\\vcpkg\\installed\\x64-windows\\bin\\gtk-3.dll");
+}
+elseif(strtolower(PHP_OS_FAMILY) === "linux") {
+	define("GTK_LIB_PATH", "/usr/lib/x86_64-linux-gnu/libgtk-3.so.0");
+}
+elseif(strtolower(PHP_OS_FAMILY) === "darwin") {
+	throw new Exception("Not tested and working on Mac", 0);
+	// define("GTK_LIB_PATH", "/usr/lib/x86_64-linux-gnu/libgtk-3.so.0");
+}
 
 // Define if need recompile headers on run
 define("PHPGTK3_RECOMPILE_HEADERS", TRUE);
@@ -23,6 +32,9 @@ spl_autoload_register(function($className) {
 	require_once($filename);
 });
 
+/**
+ * Main PhpGtk3 class
+ */
 class PhpGtk3
 {
 	private static $instance;
@@ -68,7 +80,8 @@ class PhpGtk3
 		}
 
 		// Carrega o header
-		$this->ffi = \FFI::load($final_header);
+		//$this->ffi = \FFI::load($final_header);
+		$this->ffi = \FFI::cdef(file_get_contents($final_header), GTK_LIB_PATH);
 	}
 
 	/**

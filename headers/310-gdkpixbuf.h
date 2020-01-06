@@ -16,11 +16,5 @@ struct _GdkPixbufClass {
     GObjectClass parent_class;
 };
 
-struct _GError {
-  // GQuark       domain;
-  gint         code;
-  gchar       *message;
-};
-typedef struct _GError GError;
 
 GdkPixbuf *gdk_pixbuf_new_from_file (const char *filename, GError **error);

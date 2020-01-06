@@ -1,6 +1,6 @@
 // This methods are here because GCallback has GdkEvent to pass that for now
 //		need to pass correct params as FFI not support variadic function
-typedef void  *GCallback (gpointer *widget, GdkEvent *data);
+typedef void *GCallback (gpointer *widget, GdkEvent *data);
 typedef void *GClosureNotify (gpointer data, GClosure *closure);
 guint g_signal_lookup (const gchar *name, GType itype);
 void g_signal_query (guint signal_id, GSignalQuery *query);

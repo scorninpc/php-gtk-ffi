@@ -8,3 +8,7 @@ typedef struct _GtkContainer GtkContainer;
 typedef struct _GtkContainerClass GtkContainerClass;
 typedef struct _GtkWindow GtkWindow;
 typedef struct _GtkWidgetPrivate GtkWidgetPrivate;
+typedef struct _GtkEntry GtkEntry;
+typedef struct _GtkEntryClass GtkEntryClass;
+typedef struct _GtkAdjustment GtkAdjustment;
+typedef struct _GtkTargetList GtkTargetList;

@@ -1,4 +1,4 @@
-#define FFI_LIB "/usr/lib/x86_64-linux-gnu/libgtk-3.so.0"
+
 
 typedef void* gpointer;
 typedef char gchar;
@@ -13,9 +13,11 @@ typedef unsigned int guint32;
 typedef unsigned long gulong;
 typedef double gdouble;
 typedef float gfloat;
-typedef gulong GType;
 typedef unsigned int gsize;
+typedef const void *gconstpointer;
 typedef guint32 gunichar;
+typedef gulong GType;
+typedef guint32 GQuark;
 
 typedef enum
 {
@@ -38,6 +40,7 @@ typedef enum {
 typedef struct _GObject GInitiallyUnowned;
 typedef struct _GSList GSList;
 typedef struct _GList GList;
+typedef struct _GIcon GIcon;
 typedef struct _GValue GValue;
 typedef union  _GTypeCValue GTypeCValue;
 typedef struct _GTypePlugin GTypePlugin;
@@ -56,6 +59,7 @@ typedef struct _GObjectClass GInitiallyUnownedClass;
 typedef struct _GObjectConstructParam GObjectConstructParam;
 typedef struct _GTypeClass GTypeClass;
 typedef struct _GTypeInstance GTypeInstance;
+typedef struct _GTypeInstanceError GError;
 
 typedef struct {
 	guint in_marshal;
@@ -108,6 +112,21 @@ struct  _GObject
   guint ref_count;
   // GData *qdata;
 };
+
+
+struct _GError
+{
+  GQuark       domain;
+  gint         code;
+  gchar       *message;
+};
+
+guint g_icon_hash (gconstpointer icon);
+gboolean g_icon_equal (GIcon *icon1, GIcon *icon2);
+gchar *g_icon_to_string (GIcon *icon);
+GIcon * g_icon_new_for_string (const gchar *str, GError **error);
+// GVariant * g_icon_serialize (GIcon *icon);
+// GIcon *g_icon_deserialize (GVariant *value);
 
 
 
@@ -208,10 +227,18 @@ typedef enum
   GDK_DAMAGE            = 36
 } GdkEventType;
 
+typedef enum
+{
+  GDK_ACTION_COPY    = 1 << 0,
+  GDK_ACTION_MOVE    = 1 << 1,
+  GDK_ACTION_LINK    = 1 << 2,
+  GDK_ACTION_ASK     = 1 << 3
+} GdkDragAction;
+
 typedef struct _GdkWindow GdkWindow;
 typedef struct _GdkDevice GdkDevice;
 typedef struct _GdkRectangle GdkRectangle;
-typedef struct _GdkPixbuf    GdkPixbuf;
+typedef struct _GdkPixbuf GdkPixbuf;
 typedef struct _GdkPixbufClass GdkPixbufClass;
 typedef struct _GdkEventKey GdkEventKey;
 typedef struct _GdkEventButton GdkEventButton;
@@ -254,7 +281,7 @@ struct _GdkEvent
 
 // This methods are here because GCallback has GdkEvent to pass that for now
 //		need to pass correct params as FFI not support variadic function
-typedef void  *GCallback (gpointer *widget, GdkEvent *data);
+typedef void *GCallback (gpointer *widget, GdkEvent *data);
 typedef void *GClosureNotify (gpointer data, GClosure *closure);
 guint g_signal_lookup (const gchar *name, GType itype);
 void g_signal_query (guint signal_id, GSignalQuery *query);
@@ -414,6 +441,10 @@ typedef struct _GtkContainer GtkContainer;
 typedef struct _GtkContainerClass GtkContainerClass;
 typedef struct _GtkWindow GtkWindow;
 typedef struct _GtkWidgetPrivate GtkWidgetPrivate;
+typedef struct _GtkEntry GtkEntry;
+typedef struct _GtkEntryClass GtkEntryClass;
+typedef struct _GtkAdjustment GtkAdjustment;
+typedef struct _GtkTargetList GtkTargetList;
 
 typedef struct {
   gint x;
@@ -440,12 +471,6 @@ struct _GdkPixbufClass {
     GObjectClass parent_class;
 };
 
-struct _GError {
-  // GQuark       domain;
-  gint         code;
-  gchar       *message;
-};
-typedef struct _GError GError;
 
 GdkPixbuf *gdk_pixbuf_new_from_file (const char *filename, GError **error);
 
@@ -534,6 +559,26 @@ void gtk_accelerator_set_default_mod_mask (GdkModifierType default_mod_mask);
 
 GdkModifierType gtk_accelerator_get_default_mod_mask (void);
 
+
+
+GtkAdjustment * gtk_adjustment_new (gdouble value, gdouble lower, gdouble upper, gdouble step_increment, gdouble page_increment, gdouble page_size);
+gdouble gtk_adjustment_get_value (GtkAdjustment *adjustment);
+void gtk_adjustment_set_value (GtkAdjustment *adjustment, gdouble value);
+void gtk_adjustment_clamp_page (GtkAdjustment *adjustment, gdouble lower, gdouble upper);
+void gtk_adjustment_changed (GtkAdjustment *adjustment);
+void gtk_adjustment_value_changed (GtkAdjustment *adjustment);
+void gtk_adjustment_configure (GtkAdjustment *adjustment, gdouble value, gdouble lower, gdouble upper, gdouble step_increment, gdouble page_increment, gdouble page_size);
+gdouble gtk_adjustment_get_lower (GtkAdjustment *adjustment);
+gdouble gtk_adjustment_get_page_increment (GtkAdjustment *adjustment);
+gdouble gtk_adjustment_get_page_size (GtkAdjustment *adjustment);
+gdouble gtk_adjustment_get_step_increment (GtkAdjustment *adjustment);
+gdouble gtk_adjustment_get_minimum_increment (GtkAdjustment *adjustment);
+gdouble gtk_adjustment_get_upper (GtkAdjustment *adjustment);
+void gtk_adjustment_set_lower (GtkAdjustment *adjustment, gdouble lower);
+void gtk_adjustment_set_page_increment (GtkAdjustment *adjustment, gdouble page_increment);
+void gtk_adjustment_set_page_size (GtkAdjustment *adjustment, gdouble page_size);
+void gtk_adjustment_set_step_increment (GtkAdjustment *adjustment, gdouble step_increment);
+void gtk_adjustment_set_upper (GtkAdjustment *adjustment, gdouble upper);
 
 
 GtkWidget * gtk_box_new (GtkOrientation orientation, gint spacing);
@@ -627,17 +672,22 @@ void gtk_container_class_handle_border_width (GtkContainerClass *klass);
 
 
 
-// GTKENTRY
-
+// 
 typedef enum
 {
   GTK_ENTRY_ICON_PRIMARY,
   GTK_ENTRY_ICON_SECONDARY
 } GtkEntryIconPosition;
 
-typedef struct _GtkEntry              GtkEntry;
-typedef struct _GtkEntryClass         GtkEntryClass;
+typedef enum
+{
+  GTK_IMAGE_EMPTY,
+  GTK_IMAGE_ICON_NAME,
+  GTK_IMAGE_GICON,
+  GTK_IMAGE_PAINTABLE
+} GtkImageType;
 
+// 
 struct _GtkEntry
 {
   GtkWidget  parent_instance;
@@ -651,75 +701,84 @@ struct _GtkEntryClass
 };
 
 
-
-
-// GType gtk_entry_get_type (void);
-GtkWidget* gtk_entry_new (void);
-// GtkWidget* gtk_entry_new_with_buffer (GtkEntryBuffer *buffer);
-// GtkEntryBuffer* gtk_entry_get_buffer (GtkEntry *entry);
+//
+GtkWidget * gtk_entry_new (void);
+// GtkWidget * gtk_entry_new_with_buffer (GtkEntryBuffer *buffer);
+// GtkEntryBuffer * gtk_entry_get_buffer (GtkEntry *entry);
 // void gtk_entry_set_buffer (GtkEntry *entry, GtkEntryBuffer *buffer);
-void gtk_entry_set_visibility (GtkEntry *entry, gboolean visible);
-gboolean gtk_entry_get_visibility (GtkEntry *entry);
-void gtk_entry_set_invisible_char (GtkEntry *entry, gunichar ch);
-gunichar gtk_entry_get_invisible_char (GtkEntry *entry);
-void gtk_entry_unset_invisible_char (GtkEntry *entry);
-void gtk_entry_set_has_frame (GtkEntry *entry, gboolean setting);
-gboolean gtk_entry_get_has_frame (GtkEntry *entry);
-void gtk_entry_set_overwrite_mode (GtkEntry *entry, gboolean overwrite);
-gboolean gtk_entry_get_overwrite_mode (GtkEntry *entry);
-void gtk_entry_set_max_length (GtkEntry *entry, gint max);
-gint gtk_entry_get_max_length (GtkEntry *entry);
+void gtk_entry_set_text (GtkEntry *entry, gchar *text);
+gchar * gtk_entry_get_text (GtkEntry *entry);
 guint16 gtk_entry_get_text_length (GtkEntry *entry);
-void gtk_entry_set_activates_default (GtkEntry *entry, gboolean setting);
+void gtk_entry_get_text_area (GtkEntry *entry, GdkRectangle *text_area);
+void gtk_entry_set_visibility (GtkEntry *entry, gboolean visible);
+void gtk_entry_set_invisible_char (GtkEntry *entry, gunichar ch);
+void gtk_entry_unset_invisible_char (GtkEntry *entry);
+void gtk_entry_set_max_length (GtkEntry *entry, gint max);
 gboolean gtk_entry_get_activates_default (GtkEntry *entry);
+gboolean gtk_entry_get_has_frame (GtkEntry *entry);
+// DEPRECATED GtkBorder * gtk_entry_get_inner_border (GtkEntry *entry);
+gint gtk_entry_get_width_chars (GtkEntry *entry);
+gint gtk_entry_get_max_width_chars (GtkEntry *entry);
+void gtk_entry_set_activates_default (GtkEntry *entry, gboolean setting);
+void gtk_entry_set_has_frame (GtkEntry *entry, gboolean setting);
+// DEPRECATED void gtk_entry_set_inner_border (GtkEntry *entry, GtkBorder *border);
+void gtk_entry_set_width_chars (GtkEntry *entry, gint n_chars);
+void gtk_entry_set_max_width_chars (GtkEntry *entry, gint n_chars);
+gunichar gtk_entry_get_invisible_char (GtkEntry *entry);
 void gtk_entry_set_alignment (GtkEntry *entry, gfloat xalign);
 gfloat gtk_entry_get_alignment (GtkEntry *entry);
+void gtk_entry_set_placeholder_text (GtkEntry *entry, gchar *text);
+gchar * gtk_entry_get_placeholder_text (GtkEntry *entry);
+void gtk_entry_set_overwrite_mode (GtkEntry *entry, gboolean overwrite);
+gboolean gtk_entry_get_overwrite_mode (GtkEntry *entry);
+// PangoLayout * gtk_entry_get_layout (GtkEntry *entry);
+void gtk_entry_get_layout_offsets (GtkEntry *entry, gint *x, gint *y);
+gint gtk_entry_layout_index_to_text_index (GtkEntry *entry, gint layout_index);
+gint gtk_entry_text_index_to_layout_index (GtkEntry *entry, gint text_index);
+// void gtk_entry_set_attributes (GtkEntry *entry, PangoAttrList *attrs);
+// PangoAttrList * gtk_entry_get_attributes (GtkEntry *entry);
+gint gtk_entry_get_max_length (GtkEntry *entry);
+gboolean gtk_entry_get_visibility (GtkEntry *entry);
 // void gtk_entry_set_completion (GtkEntry *entry, GtkEntryCompletion *completion);
-// GtkEntryCompletion *gtk_entry_get_completion (GtkEntry *entry);
+// GtkEntryCompletion * gtk_entry_get_completion (GtkEntry *entry);
+void gtk_entry_set_cursor_hadjustment (GtkEntry *entry, GtkAdjustment *adjustment);
+GtkAdjustment * gtk_entry_get_cursor_hadjustment (GtkEntry *entry);
 void gtk_entry_set_progress_fraction (GtkEntry *entry, gdouble fraction);
 gdouble gtk_entry_get_progress_fraction (GtkEntry *entry);
 void gtk_entry_set_progress_pulse_step (GtkEntry *entry, gdouble fraction);
 gdouble gtk_entry_get_progress_pulse_step (GtkEntry *entry);
 void gtk_entry_progress_pulse (GtkEntry *entry);
-const gchar* gtk_entry_get_placeholder_text (GtkEntry *entry);
-void gtk_entry_set_placeholder_text (GtkEntry *entry, const gchar *text);
-// void gtk_entry_set_icon_from_paintable (GtkEntry *entry, GtkEntryIconPosition  icon_pos, GdkPaintable *paintable);
-void gtk_entry_set_icon_from_icon_name (GtkEntry *entry, GtkEntryIconPosition  icon_pos, const gchar *icon_name);
-// void gtk_entry_set_icon_from_gicon (GtkEntry *entry, GtkEntryIconPosition  icon_pos, GIcon *icon);
-// GtkImageType gtk_entry_get_icon_storage_type (GtkEntry *entry, GtkEntryIconPosition  icon_pos);
-// GdkPaintable * gtk_entry_get_icon_paintable (GtkEntry *entry, GtkEntryIconPosition  icon_pos);
-GdkPixbuf * gtk_entry_get_icon_pixbuf (GtkEntry *entry, GtkEntryIconPosition icon_pos);
+gboolean gtk_entry_im_context_filter_keypress (GtkEntry *entry, GdkEventKey *event);
+void gtk_entry_reset_im_context (GtkEntry *entry);
+// PangoTabArray * gtk_entry_get_tabs (GtkEntry *entry);
+// void gtk_entry_set_tabs (GtkEntry *entry, PangoTabArray *tabs);
 void gtk_entry_set_icon_from_pixbuf (GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkPixbuf *pixbuf);
-const gchar* gtk_entry_get_icon_name (GtkEntry *entry, GtkEntryIconPosition  icon_pos);
-// GIcon* gtk_entry_get_icon_gicon (GtkEntry *entry, GtkEntryIconPosition  icon_pos);
-void gtk_entry_set_icon_activatable (GtkEntry *entry, GtkEntryIconPosition  icon_pos, gboolean activatable);
-gboolean gtk_entry_get_icon_activatable (GtkEntry *entry, GtkEntryIconPosition  icon_pos);
-void gtk_entry_set_icon_sensitive (GtkEntry *entry, GtkEntryIconPosition  icon_pos, gboolean sensitive);
-gboolean gtk_entry_get_icon_sensitive (GtkEntry *entry, GtkEntryIconPosition  icon_pos);
+// DEPRECATED void gtk_entry_set_icon_from_stock (GtkEntry *entry, GtkEntryIconPosition icon_pos, gchar *stock_id);
+void gtk_entry_set_icon_from_icon_name (GtkEntry *entry, GtkEntryIconPosition icon_pos, gchar *icon_name);
+void gtk_entry_set_icon_from_gicon (GtkEntry *entry, GtkEntryIconPosition icon_pos, GIcon *icon);
+GtkImageType gtk_entry_get_icon_storage_type (GtkEntry *entry, GtkEntryIconPosition icon_pos);
+GdkPixbuf * gtk_entry_get_icon_pixbuf (GtkEntry *entry, GtkEntryIconPosition icon_pos);
+// DEPRECATED gchar * gtk_entry_get_icon_stock (GtkEntry *entry, GtkEntryIconPosition icon_pos);
+gchar * gtk_entry_get_icon_name (GtkEntry *entry, GtkEntryIconPosition icon_pos);
+GIcon * gtk_entry_get_icon_gicon (GtkEntry *entry, GtkEntryIconPosition icon_pos);
+void gtk_entry_set_icon_activatable (GtkEntry *entry, GtkEntryIconPosition icon_pos, gboolean activatable);
+gboolean gtk_entry_get_icon_activatable (GtkEntry *entry, GtkEntryIconPosition icon_pos);
+void gtk_entry_set_icon_sensitive (GtkEntry *entry, GtkEntryIconPosition icon_pos, gboolean sensitive);
+gboolean gtk_entry_get_icon_sensitive (GtkEntry *entry, GtkEntryIconPosition icon_pos);
 gint gtk_entry_get_icon_at_pos (GtkEntry *entry, gint x, gint y);
-void gtk_entry_set_icon_tooltip_text (GtkEntry *entry, GtkEntryIconPosition  icon_pos, const gchar *tooltip);
-gchar * gtk_entry_get_icon_tooltip_text (GtkEntry *entry, GtkEntryIconPosition  icon_pos);
-void gtk_entry_set_icon_tooltip_markup (GtkEntry *entry, GtkEntryIconPosition  icon_pos, const gchar *tooltip);
-gchar * gtk_entry_get_icon_tooltip_markup (GtkEntry *entry, GtkEntryIconPosition  icon_pos);
-// void gtk_entry_set_icon_drag_source (GtkEntry *entry, GtkEntryIconPosition  icon_pos, GdkContentFormats *formats, GdkDragAction actions);
+void gtk_entry_set_icon_tooltip_text (GtkEntry *entry, GtkEntryIconPosition icon_pos, gchar *tooltip);
+gchar * gtk_entry_get_icon_tooltip_text (GtkEntry *entry, GtkEntryIconPosition icon_pos);
+void gtk_entry_set_icon_tooltip_markup (GtkEntry *entry, GtkEntryIconPosition icon_pos, gchar *tooltip);
+gchar * gtk_entry_get_icon_tooltip_markup (GtkEntry *entry, GtkEntryIconPosition icon_pos);
+void gtk_entry_set_icon_drag_source (GtkEntry *entry, GtkEntryIconPosition icon_pos, GtkTargetList *target_list, GdkDragAction actions);
 gint gtk_entry_get_current_icon_drag_source (GtkEntry *entry);
 void gtk_entry_get_icon_area (GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkRectangle *icon_area);
-void gtk_entry_reset_im_context (GtkEntry *entry);
 // void gtk_entry_set_input_purpose (GtkEntry *entry, GtkInputPurpose purpose);
 // GtkInputPurpose gtk_entry_get_input_purpose (GtkEntry *entry);
 // void gtk_entry_set_input_hints (GtkEntry *entry, GtkInputHints hints);
-// GtkInputHints   gtk_entry_get_input_hints (GtkEntry *entry);
-// void gtk_entry_set_attributes (GtkEntry *entry, PangoAttrList *attrs);
-// PangoAttrList  *gtk_entry_get_attributes (GtkEntry *entry);
-// void gtk_entry_set_tabs (GtkEntry *entry, PangoTabArray *tabs);
-// PangoTabArray *gtk_entry_get_tabs (GtkEntry *entry);
-gboolean gtk_entry_grab_focus_without_selecting (GtkEntry *entry);
-// void gtk_entry_set_extra_menu (GtkEntry *entry, GMenuModel *model);
-// GMenuModel * gtk_entry_get_extra_menu (GtkEntry *entry);
+// GtkInputHints gtk_entry_get_input_hints (GtkEntry *entry);
+void gtk_entry_grab_focus_without_selecting (GtkEntry *entry);
 
-
-const gchar *gtk_entry_get_text (GtkEntry *entry);
-void gtk_entry_set_text (GtkEntry *entry, const gchar *text);
 
 GtkWidget *gtk_paned_new (GtkOrientation orientation);
 void gtk_paned_add1 (GtkPaned *paned, GtkWidget *child);
