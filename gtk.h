@@ -1,4 +1,4 @@
-
+#define FFI_LIB "C:\gtk3\bin\libgtk-3-0.dll"
 
 typedef void* gpointer;
 typedef char gchar;

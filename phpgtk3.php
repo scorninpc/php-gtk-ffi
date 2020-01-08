@@ -1,5 +1,8 @@
 <?php
 
+putenv("GTK_CSD=0");
+// putenv("PATH=" . getenv("PATH") . ";C:\\gtk3\\bin");
+
 // Define a path to class
 defined("PHPGTK3_PATH") || define("PHPGTK3_PATH", dirname(__FILE__));
 
@@ -8,7 +11,9 @@ defined("PHPGTK3_SOURCE_PATH") || define("PHPGTK3_SOURCE_PATH", PHPGTK3_PATH . "
 
 // Define lib path
 if(strtolower(PHP_OS_FAMILY) === "windows") {
-	define("GTK_LIB_PATH", "C:\\vcpkg\\installed\\x64-windows\\bin\\gtk-3.dll");
+	// define("GTK_LIB_PATH", "C:\\php7.4\\bin\\gtk-3.dll");
+	define("GTK_LIB_PATH", "C:\\gtk3\\bin\\libgtk-3-0.dll");
+
 }
 elseif(strtolower(PHP_OS_FAMILY) === "linux") {
 	define("GTK_LIB_PATH", "/usr/lib/x86_64-linux-gnu/libgtk-3.so.0");

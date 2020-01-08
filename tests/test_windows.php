@@ -16,6 +16,30 @@ class GtkWindow
 	{
 		$this->ffi = FFI::cdef("
 
+			typedef void* gpointer;
+			typedef char gchar;
+			typedef bool gboolean;
+			typedef unsigned long gulong;
+			typedef int gint;
+			typedef unsigned int guint;
+			typedef signed char gint8;
+			typedef signed char guint8;
+			typedef signed short guint16;
+			typedef unsigned int guint32;
+			typedef unsigned long gulong;
+			typedef double gdouble;
+			typedef float gfloat;
+			typedef unsigned int gsize;
+			typedef const void *gconstpointer;
+			typedef guint32 gunichar;
+			typedef gulong GType;
+			typedef guint32 GQuark;
+
+			// Glib
+			guint g_icon_hash (gconstpointer icon);
+
+
+			// Gtk
 			typedef struct _GtkWidget GtkWidget;
 			typedef struct _GtkBox GtkBox;
 			typedef struct _GtkButton GtkButton;
@@ -26,7 +50,6 @@ class GtkWindow
 			//typedef struct _GTypeInstanceError GError;
 			//typedef struct _GdkPixbuf GdkPixbuf;
 			//GdkPixbuf *gdk_pixbuf_new_from_file (const char *filename, GError **error);
-
 
 
 			typedef enum
@@ -40,14 +63,7 @@ class GtkWindow
 			void gtk_window_set_title(GtkWindow *, char *);
 
 
-			typedef void* gpointer;
-			typedef char   gchar;
-			typedef bool   gboolean;
-			typedef unsigned long   gulong;
-			typedef unsigned int   guint;
-			typedef signed char gint8;
-			typedef unsigned int guint32;
-			typedef double  gdouble;
+			
 
 			GtkEntry *gtk_entry_new ();
 			GtkBox *gtk_box_new (int orientation, int spacing);
@@ -62,7 +78,7 @@ class GtkWindow
 
 
 
-		", ".\\gtk-3.dll");
+		", ".\\libgtk-3-0.dll");
 
 		$this->instance = $this->ffi->gtk_window_new(0);
 
@@ -100,7 +116,7 @@ $ffi = FFI::cdef("
 	void gtk_init(int *, char **[]);
 	void gtk_main();
 	void gtk_main_quit();
-",".\\gtk-3.dll");
+",".\\libgtk-3-0.dll");
 
 /**
  */
